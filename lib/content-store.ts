@@ -1,8 +1,10 @@
 "use client";
 
-import { createClient } from "@supabase/supabase-js";
 import { defaultData } from "./default-data";
 import type { PortfolioData } from "./types";
+import { validateEngineerProjects } from "./engineer-project-store";
+import { validatePhotography } from "./photography-content";
+import { getSupabaseBrowserClient } from "./supabase-browser";
 
 const dataKey = "devyanshu-portfolio-data-v2";
 const passHashKey = "devyanshu-admin-pass-hash-v2";
@@ -26,16 +28,24 @@ export function loadLocalData(): PortfolioData {
 }
 
 export function saveLocalData(data: PortfolioData) {
+  if (data.engineerProjects) validateEngineerProjects(data.engineerProjects);
+  if (data.photography) validatePhotography(data.photography);
   window.localStorage.setItem(dataKey, JSON.stringify(data));
+  window.dispatchEvent(new Event("portfolio-content-updated"));
 }
 
 export function resetLocalData() {
   window.localStorage.removeItem(dataKey);
+  window.dispatchEvent(new Event("portfolio-content-updated"));
   return cloneData(defaultData);
 }
 
 export function shouldUseSupabaseContent() {
   return supabaseConfigured() && process.env.NEXT_PUBLIC_CONTENT_MODE !== "local";
+}
+
+export function isLocalStudioMode() {
+  return process.env.NODE_ENV !== "production" && !shouldUseSupabaseContent();
 }
 
 export function mergeData(base: PortfolioData, incoming: Partial<PortfolioData>) {
@@ -110,10 +120,7 @@ export function supabaseConfigured() {
 }
 
 export function createSupabaseBrowserClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!url || !key) return null;
-  return createClient(url, key);
+  return getSupabaseBrowserClient();
 }
 
 export async function loadSupabaseData() {
@@ -127,19 +134,26 @@ export async function loadSupabaseData() {
 export async function saveSupabaseData(content: PortfolioData) {
   const supabase = createSupabaseBrowserClient();
   if (!supabase) throw new Error("Supabase is not configured.");
+  if (content.engineerProjects) validateEngineerProjects(content.engineerProjects);
+  if (content.photography) validatePhotography(content.photography);
   const { error } = await supabase.from("portfolio_content").upsert({ id: contentRowId, content, updated_at: new Date().toISOString() });
   if (error) throw error;
+  window.dispatchEvent(new Event("portfolio-content-updated"));
 }
 
 export async function loadPortfolioData() {
-  if (!shouldUseSupabaseContent()) return loadLocalData();
+  if (isLocalStudioMode()) return loadLocalData();
   const remote = await loadSupabaseData();
-  return remote || loadLocalData();
+  return remote || cloneData(defaultData);
 }
 
 export async function savePortfolioData(content: PortfolioData) {
+  if (shouldUseSupabaseContent()) {
+    await saveSupabaseData(content);
+    return;
+  }
+  if (!isLocalStudioMode()) throw new Error("Production content storage is not securely configured.");
   saveLocalData(content);
-  if (shouldUseSupabaseContent()) await saveSupabaseData(content);
 }
 
 export function getConfiguredAdminEmail() {
@@ -168,15 +182,6 @@ export async function signInSupabaseAdmin(email: string, password: string) {
     await supabase.auth.signOut();
     throw new Error("This email is not allowed to manage this portfolio.");
   }
-  return data.user;
-}
-
-export async function signUpSupabaseAdmin(email: string, password: string) {
-  const supabase = createSupabaseBrowserClient();
-  if (!supabase) throw new Error("Supabase is not configured.");
-  if (!isConfiguredAdminEmail(email)) throw new Error("Use the admin email configured for this portfolio.");
-  const { data, error } = await supabase.auth.signUp({ email, password });
-  if (error) throw error;
   return data.user;
 }
 

@@ -1,0 +1,177 @@
+.studio {
+  --studio-accent: #2b6fce;
+  min-height: 100vh;
+  background: #0d100f;
+  color: #eef0eb;
+}
+
+.studio[data-area="engineering"] { --studio-accent: #3d8b69; }
+.studio[data-area="photography"] { --studio-accent: #e45143; }
+
+.topbar {
+  position: sticky;
+  z-index: 30;
+  top: 0;
+  min-height: 68px;
+  padding: 0 24px;
+  border-bottom: 1px solid #303633;
+  background: #0d100f;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.brand,
+.topActions,
+.topActions a,
+.topActions button,
+.utilityActions,
+.utilityActions button,
+.utilityActions label {
+  display: flex;
+  align-items: center;
+}
+
+.brand { gap: 10px; font-weight: 800; }
+.brand svg { color: var(--studio-accent); }
+.topActions { gap: 8px; }
+
+.topActions a,
+.topActions button,
+.utilityActions button,
+.utilityActions label {
+  min-height: 38px;
+  gap: 8px;
+  border: 1px solid #3b423f;
+  border-radius: 4px;
+  background: #171b19;
+  color: #eef0eb;
+  padding: 0 12px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.topActions > button:first-of-type { border-color: var(--studio-accent); background: var(--studio-accent); color: white; }
+.topActions .iconButton { width: 38px; padding: 0; justify-content: center; }
+.saveState { color: #9ea8a2; font: 0.72rem ui-monospace, monospace; text-transform: uppercase; }
+.saveState[data-dirty="true"] { color: #f2b24b; }
+
+.workspace { display: grid; grid-template-columns: 250px minmax(0, 1fr); min-height: calc(100vh - 68px); }
+.sidebar { position: sticky; top: 68px; height: calc(100vh - 68px); border-right: 1px solid #303633; padding: 28px 18px; }
+.modeLabel { display: flex; justify-content: space-between; color: #78817c; font: 0.68rem ui-monospace, monospace; }
+.modeLabel b { color: var(--studio-accent); }
+.sidebar nav { display: grid; gap: 6px; margin-top: 28px; }
+.sidebar nav button {
+  width: 100%; min-height: 66px; display: grid; grid-template-columns: 24px 24px 1fr; gap: 10px; align-items: center;
+  border: 1px solid transparent; border-radius: 4px; background: transparent; color: #9ea8a2; padding: 10px; text-align: left; cursor: pointer;
+}
+.sidebar nav button > span { font: 0.65rem ui-monospace, monospace; }
+.sidebar nav button div { display: grid; gap: 3px; }
+.sidebar nav button strong { color: #eef0eb; font-size: 0.95rem; }
+.sidebar nav button small { color: #78817c; font-size: 0.72rem; }
+.sidebar nav button[data-active="true"] { border-color: #3b423f; background: #171b19; box-shadow: inset 3px 0 0 var(--studio-accent); }
+.sidebar nav button[data-active="true"] svg,
+.sidebar nav button[data-active="true"] > span { color: var(--studio-accent); }
+.sidebarStatus { position: absolute; bottom: 28px; left: 28px; color: #78817c; font: 0.66rem ui-monospace, monospace; }
+.liveDot { display: inline-block; width: 7px; height: 7px; margin-right: 8px; border-radius: 50%; background: #51b486; box-shadow: 0 0 0 4px rgba(81, 180, 134, 0.1); }
+
+.editor { min-width: 0; background: #f1f1ec; color: #171a18; padding: 44px clamp(24px, 5vw, 72px) 80px; }
+.homePanel,
+.contentPanel { width: min(980px, 100%); margin: 0 auto; }
+.panelHeader { display: flex; justify-content: space-between; gap: 24px; align-items: flex-start; padding-bottom: 28px; border-bottom: 1px solid #c9cbc5; }
+.panelHeader > div { max-width: 700px; }
+.panelHeader svg { color: var(--studio-accent); flex: 0 0 auto; }
+.eyebrow { color: var(--studio-accent); font: 0.7rem ui-monospace, monospace; letter-spacing: 0; }
+.panelHeader h1 { margin-top: 10px; font-family: Georgia, "Times New Roman", serif; font-size: 3.7rem; font-weight: 500; line-height: 1; }
+.panelHeader p { margin-top: 12px; max-width: 620px; color: #606762; font-size: 1rem; line-height: 1.6; }
+
+.routeList { border-bottom: 1px solid #c9cbc5; }
+.routeList article { display: grid; grid-template-columns: 36px 32px 1fr auto; gap: 14px; align-items: center; min-height: 92px; border-top: 1px solid #c9cbc5; }
+.routeList article:first-child { border-top: 0; }
+.routeList article > span { color: var(--studio-accent); font: 0.72rem ui-monospace, monospace; }
+.routeList h2 { font-family: Georgia, "Times New Roman", serif; font-size: 1.35rem; font-weight: 500; }
+.routeList p { margin-top: 4px; color: #69706b; }
+.routeList a { display: inline-flex; align-items: center; gap: 7px; font-weight: 750; }
+
+.utilitySection { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 32px; align-items: end; margin-top: 52px; padding: 24px; border: 1px solid #c9cbc5; border-radius: 6px; background: #e7e8e2; }
+.utilitySection h2 { margin-top: 8px; font-family: Georgia, "Times New Roman", serif; font-weight: 500; }
+.utilitySection p { margin-top: 8px; max-width: 570px; color: #606762; line-height: 1.5; }
+.utilityActions { flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+.utilityActions button,
+.utilityActions label { background: #f1f1ec; color: #171a18; border-color: #b9bdb7; }
+.utilityActions input { display: none; }
+
+.connectedField { display: grid; grid-template-columns: minmax(260px, 520px) 1fr; align-items: end; gap: 16px; padding: 24px 0; border-bottom: 1px solid #c9cbc5; }
+.connectedField label { display: grid; gap: 8px; font-weight: 750; }
+.connectedField input { min-height: 42px; border: 1px solid #b9bdb7; border-radius: 4px; background: white; padding: 0 12px; }
+.connectedField small { color: #69706b; line-height: 1.5; }
+
+.contentPanel > :global(.admin-form) { margin-top: 30px; }
+.contentPanel :global(.admin-form) { display: grid; gap: 16px; }
+.contentPanel :global(.admin-form-grid) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.contentPanel :global(.inline-actions) { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.contentPanel :global(.field) { display: grid; gap: 7px; color: #262b28; font-weight: 700; }
+.contentPanel :global(.field input),
+.contentPanel :global(.field select),
+.contentPanel :global(.field textarea),
+.contentPanel :global(.inline-actions > input) { width: 100%; min-height: 42px; border: 1px solid #b9bdb7; border-radius: 4px; background: white; color: #171a18; padding: 10px 11px; }
+.contentPanel :global(.field textarea) { min-height: 100px; resize: vertical; }
+.contentPanel :global(.button) { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 40px; border: 1px solid #171a18; border-radius: 4px; background: #171a18; color: white; padding: 0 12px; cursor: pointer; font-weight: 750; }
+.contentPanel :global(.button.secondary) { background: transparent; color: #171a18; border-color: #b9bdb7; }
+.contentPanel :global(.button:disabled) { opacity: 0.42; cursor: not-allowed; }
+.contentPanel :global(h2) { font-family: Georgia, "Times New Roman", serif; font-size: 1.7rem; font-weight: 500; }
+.contentPanel :global(h3) { margin-top: 18px; padding-top: 18px; border-top: 1px solid #c9cbc5; font-size: 1rem; }
+.contentPanel :global(p) { color: #606762; line-height: 1.55; }
+.contentPanel :global(img) { border: 10px solid #171a18; background: #171a18; }
+.photoPanel :global(.admin-form) { position: relative; }
+.photoPanel :global(.admin-form)::before { content: "FRAME EDITOR"; position: absolute; right: 0; top: 4px; color: var(--studio-accent); font: 0.68rem ui-monospace, monospace; }
+
+.loginPage,
+.loading { min-height: 100vh; display: grid; place-items: center; padding: 28px; background: #0d100f; color: #eef0eb; }
+.loginPanel { width: min(480px, 100%); display: grid; gap: 16px; padding: 34px; border: 1px solid #3b423f; border-radius: 6px; background: #171b19; }
+.loginPanel > svg { color: #e45143; }
+.loginPanel h1 { font-family: Georgia, "Times New Roman", serif; font-size: 4.2rem; font-weight: 500; line-height: 0.95; }
+.loginPanel p { color: #9ea8a2; line-height: 1.5; }
+.loginPanel label { display: grid; gap: 7px; font-weight: 700; }
+.loginPanel input { min-height: 44px; border: 1px solid #3b423f; border-radius: 4px; background: #0d100f; color: white; padding: 0 12px; }
+.loginPanel button,
+.loginPanel a { min-height: 42px; display: flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid #e45143; border-radius: 4px; background: #e45143; color: white; font-weight: 750; cursor: pointer; }
+.loginPanel a { background: transparent; border-color: #3b423f; }
+.loginPanel button:disabled { cursor: wait; opacity: 0.62; }
+.loginPanel .secondaryLoginAction { background: transparent; border-color: #3b423f; }
+.loginPanel .error { color: #ff8d82; }
+.qrFrame { display: grid; place-items: center; padding: 16px; background: white; border-radius: 4px; }
+.qrFrame img { display: block; width: min(240px, 100%); height: auto; }
+.mfaSecret { overflow-wrap: anywhere; padding: 12px; border: 1px solid #3b423f; background: #0d100f; color: #eef0eb; text-align: center; }
+
+@media (max-width: 800px) {
+  .topbar { align-items: flex-start; padding-block: 14px; }
+  .topActions { justify-content: flex-end; flex-wrap: wrap; }
+  .saveState { width: 100%; text-align: right; }
+  .workspace { grid-template-columns: 1fr; }
+  .sidebar { position: static; height: auto; padding: 12px 16px; border-right: 0; border-bottom: 1px solid #303633; }
+  .modeLabel, .sidebarStatus { display: none; }
+  .sidebar nav { grid-template-columns: repeat(3, 1fr); margin: 0; }
+  .sidebar nav button { grid-template-columns: 18px 1fr; min-height: 54px; }
+  .sidebar nav button svg { display: none; }
+  .sidebar nav button small { display: none; }
+  .editor { padding: 30px 18px 60px; }
+  .panelHeader > svg { display: none; }
+  .routeList article { grid-template-columns: 28px 26px 1fr; padding: 14px 0; }
+  .routeList article a { grid-column: 3; justify-self: start; }
+  .utilitySection, .connectedField { grid-template-columns: 1fr; }
+  .utilityActions { justify-content: flex-start; }
+  .contentPanel :global(.admin-form-grid) { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 520px) {
+  .brand span { display: none; }
+  .topActions > a { display: none; }
+  .topActions button:not(.iconButton) { padding-inline: 10px; }
+  .sidebar nav button { padding: 8px 6px; }
+  .sidebar nav button > span { display: none; }
+  .sidebar nav button { grid-template-columns: 1fr; text-align: center; }
+  .panelHeader h1 { font-size: 2.25rem; }
+  .loginPanel h1 { font-size: 3rem; }
+}

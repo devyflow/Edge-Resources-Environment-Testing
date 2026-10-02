@@ -1,0 +1,33 @@
+.archive.archive { max-width:1360px; padding-inline:48px; }
+.archive.archive > header { background:transparent; min-height:88px; gap:20px; }
+.archive.archive > header h1 { font-family:"Segoe UI",Arial,sans-serif; font-size:28px; font-weight:500; }
+.archive.archive > header > div > span { font:12px/1.6 Consolas,monospace; color:var(--muted); }
+.archive.archive > div:first-of-type { padding-block:18px; border-bottom:1px solid var(--line); margin-bottom:24px; }
+.archive.archive .dial { width:72px; height:72px; display:block; padding:4px; }
+.archive.archive .dial svg { width:29px; height:29px; }
+.archive.archive section[aria-label="Feed"],.archive.archive section[aria-label="Single frame"] { max-width:100%; }
+.archive.archive section:not([aria-label="Contact sheet"]) > article { width:fit-content; max-width:100%; margin:0 auto 38px; }
+.archive.archive section:not([aria-label="Contact sheet"]) > article > a { background:transparent; width:fit-content; max-width:100%; margin:0; }
+.archive.archive section:not([aria-label="Contact sheet"]) > article > a img { width:auto; max-width:100%; height:auto; max-height:max(150px,calc(100svh - var(--frame-space))); }
+.archive.archive section:not([aria-label="Contact sheet"]) > article > div { width:0; min-width:100%; border-bottom:1px solid var(--line); padding:16px 0 22px; }
+.archive.archive section[aria-label="Contact sheet"] > article > a { background:transparent; }
+.archive.archive[data-mode="0"] section[aria-label="Feed"] { max-width:1000px; }
+.archive.archive[data-mode="0"] section[aria-label="Feed"] > article { width:100%; }
+.archive.archive[data-mode="0"] section[aria-label="Feed"] > article > a { width:100%; }
+.archive.archive[data-mode="0"] section[aria-label="Feed"] > article > a img { width:100%; height:auto; max-height:none; }
+.archive.archive[data-mode="0"] section[aria-label="Feed"] > article > div { width:100%; min-width:0; }
+.archive.archive { --frame-space:340px; }
+.archive.archive[data-mode="2"] { --frame-space:400px; }
+.archive.archive[data-filters=true] { --frame-space:425px; }
+.archive.archive[data-mode="2"][data-filters=true] { --frame-space:485px; }
+@media(max-width:1100px) { .archive.archive { padding-inline:28px; } }
+@media(max-width:700px) {
+  .archive.archive { padding-inline:22px; --frame-space:300px; }
+  .archive.archive > header { min-height:80px; gap:8px; }
+  .archive.archive > header h1 { font-size:23px; }
+  .archive.archive > header > div > span { font-size:11px; }
+  .archive.archive .dial { width:56px; height:56px; padding:3px; }
+  .archive.archive .dial svg { width:23px; height:23px; }
+  .archive.archive > div:first-of-type { padding-block:12px; margin-bottom:18px; }
+  .archive.archive[data-mode="2"] { --frame-space:365px; }
+}

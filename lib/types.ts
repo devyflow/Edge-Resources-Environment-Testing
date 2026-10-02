@@ -1,5 +1,7 @@
 export type ThumbType = "store" | "whatsapp" | "food" | "ai";
 export type NoteType = "event" | "build" | "demo" | "research";
+export type PublishStatus = "draft" | "published";
+export type PostKind = "engineering" | "build-log" | "photography" | "event" | "note";
 
 export type Screenshot = {
   title: string;
@@ -49,7 +51,37 @@ export type FieldNote = {
   imageUrl?: string;
 };
 
+export type FreeTool = {
+  id: string;
+  visible?: boolean;
+  featured?: boolean;
+  status: PublishStatus;
+  title: string;
+  eyebrow: string;
+  summary: string;
+  description: string;
+  category: string;
+  capabilities: string[];
+};
+
+export type JournalPost = {
+  id: string;
+  visible?: boolean;
+  featured?: boolean;
+  status: PublishStatus;
+  kind: PostKind;
+  title: string;
+  excerpt: string;
+  body: string;
+  date: string;
+  location?: string;
+  coverImage?: string;
+  relatedProjectId?: string;
+};
+
 export type Profile = {
+  brandName: string;
+  brandLine: string;
   name: string;
   initials: string;
   roleLine: string;
@@ -61,6 +93,9 @@ export type Profile = {
   heroWords: string[];
   heroLead: string;
   availability: string;
+  currentFocus: string;
+  currentLearning: string;
+  currentLocation: string;
 };
 
 export type ResumeInfo = {
@@ -88,7 +123,10 @@ export type SectionVisibility = {
   hero: boolean;
   proof: boolean;
   focus: boolean;
+  now: boolean;
   projects: boolean;
+  tools: boolean;
+  journal: boolean;
   notes: boolean;
   skills: boolean;
   experience: boolean;
@@ -104,11 +142,16 @@ export type SectionVisibility = {
 };
 
 export type PortfolioData = {
+  homeExperience?: import("./home-content").HomeExperienceContent;
+  photography?: import("./photography-content").PhotographyContent;
+  engineerProjects?: import("./engineer-project-store").EngineerProject[];
   sections: SectionVisibility;
   profile: Profile;
   resume: ResumeInfo;
   projects: Project[];
   notes: FieldNote[];
+  tools: FreeTool[];
+  posts: JournalPost[];
   skills: SkillsInfo;
   experience: ExperienceItem[];
 };

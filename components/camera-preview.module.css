@@ -1,0 +1,286 @@
+.page {
+  --surface: #191b1c;
+  --muted: #a5a7a8;
+  --line: #363839;
+  --accent: #ed4940;
+  min-height: 100svh;
+  background: #17191a;
+  color: #f0f1f0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  letter-spacing: 0;
+  line-height: 1.5;
+}
+.page *, .page *::before, .page *::after { box-sizing: border-box; }
+.page button, .page a { -webkit-tap-highlight-color: transparent; }
+.page button { cursor: pointer; font: inherit; }
+.page button:disabled { opacity: .35; cursor: not-allowed; }
+.page a:focus-visible, .page button:focus-visible, .page input:focus-visible, .dial:focus-visible { outline: 2px solid #f2c36b; outline-offset: 4px; }
+.page p { color: inherit; }
+.header, .workspace, .footer { width: min(1360px, calc(100% - 64px)); margin-inline: auto; }
+.header { display: flex; align-items: center; gap: 30px; min-height: 108px; border-bottom: 1px solid #ffffff18; }
+.wordmark { font-size: 31px; font-weight: 730; line-height: 1; }
+.wordmark span { color: var(--accent); }
+.identity { border-left: 1px solid #ffffff30; padding-left: 30px; display: grid; gap: 1px; }
+.identity strong { font-size: 14px; font-weight: 600; }
+.identity > span { color: #a2a5a5; font-size: 13px; }
+.profileLinks { display: flex; margin-left: auto; gap: 9px; }
+.profileLinks > * { background: transparent; border: 0; color: inherit; display: grid; place-items: center; width: 38px; height: 38px; border-radius: 4px; }
+.profileLinks > *:hover { background: #ffffff10; }
+.workspace { padding: 26px 0 0; }
+.workspaceHeading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; color: #9a9e9e; font: 10px/1.5 Consolas, monospace; }
+.workspaceHeading > span:first-child { display: flex; align-items: center; gap: 8px; color: #d4d5d4; }
+.workspaceHeading i { height: 6px; width: 6px; background: var(--accent); border-radius: 50%; }
+.cameraBody { display: grid; grid-template-columns: minmax(0, 1fr) 232px; background: #242627; border: 1px solid #515353; border-top-color: #777; border-radius: 8px; overflow: hidden; box-shadow: 0 24px 55px #0006, 0 2px 4px #0009, inset 0 1px #ffffff30; color: #eceded; }
+.topPlate { grid-column: 1/-1; min-height: 85px; display: flex; align-items: center; gap: 26px; padding: 14px 28px; border-bottom: 1px solid #060707; background: linear-gradient(#404344, #303233 38%, #252728); box-shadow: inset 0 1px #ffffff28, 0 1px #ffffff10; }
+.modelName { font: 700 24px/1 Consolas, monospace; color: #d9dcdb; text-shadow: 0 2px #000b; display: flex; gap: 6px; }
+.modelName > span { color: #9b9d9c; font-weight: 400; }
+.modeTabs { display: flex; padding: 4px; border: 1px solid #454747; border-bottom-color: #5c5e5f; border-radius: 5px; background: #131515; box-shadow: inset 0 1px 5px #0009; gap: 3px; }
+.modeTabs button { display: flex; align-items: center; gap: 8px; padding: 9px 18px; color: #a7abaa; border: 1px solid transparent; background: none; border-radius: 3px; font-size: 13px; }
+.modeTabs button[aria-pressed="true"] { color: #fff; border-color: #535555; background: linear-gradient(#414546, #2c2e2f); box-shadow: 0 2px 3px #0009; }
+.modeTabs button[aria-pressed="true"] svg { color: #f0645c; }
+.topReadout { margin-left: auto; display: flex; align-items: center; gap: 24px; background: #131816; border: 1px solid #51554f; box-shadow: inset 0 2px 5px #000; padding: 7px 16px; border-radius: 3px; color: #b6bfa9; font-family: Consolas, monospace; }
+.topReadout > span { font-size: 10px; }
+.topReadout strong { font-size: 23px; font-weight: 400; }
+.topReadout small { font-size: 12px; }
+.hotShoe { width: 80px; height: 30px; border: 4px solid #1a1c1d; border-top: 0; border-bottom-color: #494b4c; border-radius: 0 0 3px 3px; display: flex; justify-content: center; align-items: flex-end; gap: 6px; padding-bottom: 4px; box-shadow: inset 0 0 0 1px #636565; }
+.hotShoe i { width: 5px; height: 7px; background: #777d72; border-radius: 2px; }
+.screenSide { min-width: 0; padding: 26px 26px 22px; background: radial-gradient(#ffffff06 .7px, transparent .7px) 0 0/4px 4px, #232627; }
+.screenBezel { background: #080a0a; padding: 10px 10px 0; border: 1px solid #101111; border-radius: 6px; box-shadow: inset 0 1px 2px #ffffff15, 0 1px 1px #ffffff17, 0 4px 8px #0005; }
+.viewfinder { aspect-ratio: 16/10; position: relative; background: #121413; overflow: hidden; isolation: isolate; touch-action: pan-y; }
+.photoLayers { position: absolute; inset: 0; overflow: hidden; }
+.photoLayers img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; user-select: none; transition: filter .25s ease; }
+.imageFailure { position: absolute; inset: 0; display: grid; place-items: center; font-size: 16px; background: #181c1c; }
+.finderTop, .finderBottom { position: absolute; left: 0; right: 0; display: flex; justify-content: space-between; align-items: center; padding: 15px 18px; color: #fff; font: 13px/1 Consolas, monospace; text-shadow: 0 1px 3px #000, 0 0 4px #000; pointer-events: none; z-index: 3; }
+.finderTop { top: 0; background: linear-gradient(#0006, transparent); }
+.finderTop > span:first-child { display: flex; gap: 7px; align-items: center; }
+.finderBottom { bottom: 0; justify-content: flex-start; gap: 24px; background: linear-gradient(transparent, #0006); }
+.finderBottom button { color: #fff; background: #1115; border: 1px solid #fff6; padding: 5px; display: grid; place-items: center; margin-left: auto; pointer-events: auto; border-radius: 2px; }
+.focusBracket { position: absolute; width: 92px; height: 68px; transform: translate(-50%, -50%); pointer-events: none; color: #fff; transition: left .18s ease, top .18s ease; filter: drop-shadow(0 1px 2px #0009); z-index: 2; }
+.focusBracket > i { position: absolute; width: 16px; height: 16px; border: 1px solid currentColor; }
+.focusBracket i:nth-child(1) { top: 0; left: 0; border-right: 0; border-bottom: 0; }
+.focusBracket i:nth-child(2) { top: 0; right: 0; border-left: 0; border-bottom: 0; }
+.focusBracket i:nth-child(3) { bottom: 0; left: 0; border-right: 0; border-top: 0; }
+.focusBracket i:nth-child(4) { bottom: 0; right: 0; border-left: 0; border-top: 0; }
+.focusBracket span { position: absolute; inset: 0; display: grid; place-items: center; font-size: 16px; font-weight: 200; }
+.focusBracket.focused { color: #c3efa6; }
+.thirds { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
+.thirds i { position: absolute; top: 0; bottom: 0; width: 1px; background: #fff5; }
+.thirds i:first-child { left: 33.333%; }
+.thirds i:nth-child(2) { left: 66.666%; }
+.thirds b { position: absolute; left: 0; right: 0; height: 1px; background: #fff5; }
+.thirds b:nth-child(3) { top: 33.333%; }
+.thirds b:nth-child(4) { top: 66.666%; }
+.shutterCurtain { position: absolute; inset: 0; background: #060606; transform: translateY(-101%); z-index: 8; pointer-events: none; }
+.firing .shutterCurtain { animation: shutterClose .34s ease-in-out; }
+.screenFooter { display: flex; align-items: center; gap: 16px; padding: 8px 6px; color: #68706b; font: 9px/1.4 Consolas, monospace; }
+.screenFooter > span:first-child { font-weight: 700; font-size: 10px; color: #858b86; }
+.screenFooter > span:nth-child(2) { margin-left: auto; }
+.screenLed { width: 4px; height: 4px; border-radius: 50%; background: #71915f; }
+.frameCaption { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 20px 1px 21px; }
+.frameCaption > div > span { font: 10px/1.4 Consolas, monospace; color: #9a9f9c; }
+.frameCaption h1 { font-size: 24px; line-height: 1.3; font-weight: 500; margin: 4px 0 0; color: #f0f1ee; max-width: none; overflow-wrap: anywhere; }
+.frameNavigation { display: flex; gap: 7px; }
+.frameNavigation button { display: grid; place-items: center; width: 34px; height: 34px; color: #d3d6d3; background: linear-gradient(#3f4243, #292b2c); border: 1px solid #515454; border-radius: 50%; box-shadow: 0 2px 3px #0006; }
+.frameNavigation button:active { transform: translateY(1px); box-shadow: inset 0 2px 3px #0007; }
+.playbackHeader { border-top: 1px solid #ffffff18; padding-top: 14px; display: flex; align-items: center; justify-content: space-between; }
+.albumTabs { display: flex; gap: 15px; }
+.albumTabs button { background: none; border: 0; padding: 2px 0; color: #8d9390; display: flex; align-items: center; gap: 7px; font-size: 12px; }
+.albumTabs button[aria-pressed="true"] { color: #fff; }
+.albumTabs button > span { font: 10px Consolas, monospace; border: 1px solid #58605a; padding: 2px 4px; border-radius: 3px; }
+.collectionCount { color: #8c938f; font: 10px Consolas, monospace; }
+.filmstrip { display: flex; gap: 14px; overflow-x: auto; overscroll-behavior-x: contain; padding: 12px 2px 3px; scrollbar-width: thin; scrollbar-color: #676b68 #282b29; }
+.filmFrame { flex: 0 0 calc((100% - 28px)/3); min-width: 130px; border: 0; background: none; color: #bec3bd; text-align: left; padding: 0; }
+.filmFrame > div { position: relative; aspect-ratio: 16/9; overflow: hidden; border-radius: 2px; border: 2px solid transparent; padding: 3px; background: #141717; }
+.filmFrame > div img { height: 100%; width: 100%; object-fit: cover; display: block; border-radius: 1px; opacity: .74; }
+.filmFrame[aria-pressed="true"] > div { border-color: #ed594f; }
+.filmFrame[aria-pressed="true"] > div img, .filmFrame:hover > div img { opacity: 1; }
+.filmFrame small { position: absolute; left: 6px; bottom: 6px; color: #fff; background: #101413b3; padding: 1px 4px; font: 10px/1.6 Consolas, monospace; }
+.filmFrame > span { display: block; padding-top: 7px; font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.controlSide { background: radial-gradient(#ffffff08 .7px, transparent .7px) 0 0/3px 3px, #242627; border-left: 1px solid #101111; box-shadow: inset 1px 0 #ffffff0c; padding: 23px 25px 0; display: flex; flex-direction: column; align-items: stretch; }
+.controlLabel { font: 10px/1.5 Consolas, monospace; color: #a6aba6; }
+.shutterBlock { display: flex; flex-direction: column; align-items: center; gap: 10px; padding-bottom: 20px; border-bottom: 1px solid #ffffff12; }
+.shutterButton { display: grid; place-items: center; width: 75px; height: 75px; border-radius: 50%; border: 1px solid #696c6d; background: repeating-conic-gradient(#565b5e 0deg 3deg, #171a1c 3deg 6deg); box-shadow: 0 4px 8px #000b, 0 1px 1px #000, inset 0 1px 1px #fffa; padding: 6px; }
+.shutterButton > span { height: 100%; width: 100%; border: 3px solid #242323; border-radius: 50%; display: grid; place-items: center; color: #f9d9d5; background: linear-gradient(145deg, #de5349, #9b2924); box-shadow: inset 0 1px 1px #ffffff80, inset 0 -2px 4px #36000080, 0 2px 5px #000; transition: transform .1s, box-shadow .1s; }
+.shutterButton:active > span { transform: scale(.96) translateY(1px); box-shadow: inset 0 2px 6px #34000080; }
+.shutterBlock > small { font-size: 11px; color: #a2a9a3; }
+.dialGroup { padding-top: 18px; text-align: center; }
+.dialAssembly { position: relative; height: 97px; margin-top: 9px; }
+.dialLabels { position: absolute; inset: 0; display: flex; align-items: flex-start; justify-content: space-between; font: 9px/1.2 Consolas, monospace; color: #939a94; }
+.dialLabels .litMark { color: #ed635c; }
+.dial { position: absolute; top: 9px; left: 50%; transform: translateX(-50%); width: 82px; height: 82px; padding: 5px; border-radius: 50%; background: repeating-conic-gradient(#697074 0deg 2deg, #15191a 2deg 5deg); border: 1px solid #4f5658; box-shadow: 0 5px 8px #0009, inset 0 1px 1px #c0c5c6; cursor: grab; touch-action: none; user-select: none; overflow: hidden; }
+.dial:active { cursor: grabbing; }
+.dial[aria-disabled="true"] { opacity: .5; cursor: default; }
+.dialFace { width: 100%; height: 100%; background: linear-gradient(120deg, #353b3d, #1c2021 65%, #292e30); border-radius: 50%; border: 1px solid #3b4244; box-shadow: inset 0 1px 2px #83898b, inset 0 -2px 2px #000; position: relative; display: grid; place-items: center; color: #777d7d; transition: transform .2s ease-out; }
+.dialFace > i { position: absolute; top: 5px; left: calc(50% - 1px); width: 2px; height: 9px; background: #f46b63; border-radius: 1px; box-shadow: 0 0 1px #e24e40; }
+.dialSteps { display: flex; align-items: center; justify-content: center; gap: 7px; }
+.dialSteps output { min-width: 95px; font: 11px/1.5 Consolas, monospace; color: #ebeddf; }
+.dialSteps button { display: grid; place-items: center; height: 26px; width: 25px; background: none; border: 0; color: #b9c0b9; padding: 0; }
+.exposureBlock { border-top: 1px solid #ffffff14; margin-top: 18px; padding-top: 15px; }
+.exposureBlock label { display: flex; align-items: center; justify-content: space-between; gap: 5px; font: 10px/1.5 Consolas, monospace; color: #b4b9b3; }
+.exposureBlock input { width: 100%; accent-color: #d95d53; height: 28px; margin: 6px 0 0; cursor: ew-resize; }
+.exposureTicks { display: flex; justify-content: space-between; color: #959d95; font: 9px/1.3 Consolas, monospace; }
+.colorModes { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; margin-top: 16px; background: #141717; padding: 3px; border: 1px solid #414844; border-radius: 4px; }
+.colorModes button { border: 1px solid transparent; padding: 4px; color: #919b93; background: none; border-radius: 2px; font-size: 11px; }
+.colorModes button[aria-pressed="true"] { background: linear-gradient(#414845, #2b312e); border-color: #5b625d; color: #ecefe9; box-shadow: 0 2px 2px #0008; }
+.functionKeys { display: flex; justify-content: space-between; padding: 18px 0; }
+.functionKeys button { width: 40px; height: 34px; border-radius: 4px; display: grid; place-items: center; border: 1px solid #484d4b; color: #bac0b9; background: linear-gradient(#383e3b, #232825); box-shadow: 0 2px 3px #0006; }
+.functionKeys button[aria-pressed="true"] { color: #ef776c; box-shadow: inset 0 2px 4px #0007; }
+.grip { min-height: 44px; margin: auto -25px 0; background: repeating-linear-gradient(90deg, #151817 0 3px, #2e3430 3px 4px, #252927 4px 6px); border-top: 1px solid #484d48; }
+.download { display: flex; justify-content: center; align-items: center; gap: 6px; margin-bottom: 15px; padding: 8px; color: #e2e6dc; border: 1px solid #666f64; border-radius: 3px; background: #31392f; font-size: 12px !important; }
+.underCamera { min-height: 60px; display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 13px 2px; }
+.underCamera p, .underCamera a { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #9b9f9b; }
+.underCamera p { flex: 1; }
+.underCamera a:hover { color: #e8e9e8; }
+.underCamera svg { flex-shrink: 0; }
+.footer { display: flex; gap: 25px; align-items: flex-end; border-top: 1px solid #ffffff20; padding: 29px 0 45px; }
+.footerIndex { color: #9b9f9a; font: 10px/1.4 Consolas, monospace; }
+.footer p { font-size: 24px; line-height: 1.35; margin-top: 13px; }
+.footer p span { color: #818982; }
+.footer > a { margin-left: auto; display: flex; align-items: center; gap: 10px; font-size: 13px; border-bottom: 1px solid #878d82; padding: 0 0 6px; }
+.previewNote { color: #8f968c; font-size: 11px; display: flex; align-items: center; gap: 15px; }
+.workScene { position: absolute; inset: 0; background: #d4d9d3; padding: 45px 40px; display: flex; align-items: center; justify-content: center; color: #262d29; }
+.workDocument { max-width: 650px; width: 100%; }
+.documentLabel { font: 10px Consolas, monospace; display: flex; align-items: center; gap: 8px; color: #56675b; }
+.workDocument h2 { font-size: 38px; line-height: 1.1; font-weight: 600; margin: 19px 0 18px; }
+.workDocument p { font-size: 14px; max-width: 500px; line-height: 1.55; color: #4b574f; }
+.workDocument p.workLead { font-size: 20px; line-height: 1.4; color: #242e27; margin-bottom: 15px; }
+.workTags { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 23px; font: 11px Consolas, monospace; color: #536359; }
+.documentFoot { display: flex; justify-content: space-between; gap: 15px; border-top: 1px solid #82968770; margin-top: 26px; padding-top: 12px; font: 10px Consolas, monospace; color: #56675b; }
+.architecture { display: grid; gap: 13px; padding: 0; margin: 0; list-style: none; }
+.architecture li { display: flex; gap: 12px; font-size: 14px; line-height: 1.4; }
+.architecture li > span { color: #657c6c; font: 11px Consolas, monospace; margin-top: 2px; }
+.workDocument pre { padding: 0; white-space: pre-wrap; overflow-wrap: anywhere; font: 13px/1.7 Consolas, monospace; color: #324d3a; }
+.workThumbnail { display: grid; place-items: center; color: #89978b; background: #2c3830 !important; }
+.projectActions { padding: 22px 0 0; }
+.projectActions a { display: flex; gap: 7px; align-items: center; padding: 8px 0; font-size: 12px; color: #d5ded0; }
+.projectActions a svg:last-child { margin-left: auto; }
+.projectActions p { font-size: 12px; color: #a0a99c; }
+.lightbox { padding: 18px; width: min(1250px, calc(100% - 32px)); max-height: calc(100svh - 32px); background: #171b18; border: 1px solid #798279; border-radius: 6px; color: #eff1e9; overflow-y: auto; }
+.lightbox::backdrop { background: #070b08e8; }
+.lightboxHeader { display: flex; align-items: center; justify-content: space-between; padding-bottom: 12px; }
+.lightboxHeader > button { background: #333c34; color: #fff; border: 1px solid #64715f; display: grid; place-items: center; width: 35px; height: 35px; border-radius: 3px; }
+.enlargedScene { position: relative; aspect-ratio: 16/10; overflow: hidden; }
+.lightbox > p { margin-top: 10px; font-size: 12px; color: #b7c0ad; }
+.page[data-light="true"] { background: #e8e9e5; color: #212623; }
+.page[data-light="true"] .header, .page[data-light="true"] .footer { border-color: #222b2430; }
+.page[data-light="true"] .identity { border-color: #222b2440; }
+.page[data-light="true"] .identity > span, .page[data-light="true"] .workspaceHeading, .page[data-light="true"] .underCamera p, .page[data-light="true"] .underCamera a, .page[data-light="true"] .footerIndex, .page[data-light="true"] .footer p span, .page[data-light="true"] .previewNote { color: #636c63; }
+.page[data-light="true"] .workspaceHeading > span:first-child { color: #303a30; }
+.page[data-light="true"] .profileLinks > *:hover { background: #00000010; }
+@keyframes shutterClose { 0% { transform: translateY(-101%); } 34%, 54% { transform: translateY(0); } 100% { transform: translateY(101%); } }
+@media (min-width: 1450px) {
+  .cameraBody { grid-template-columns: minmax(0, 1fr) 250px; }
+  .screenSide { padding: 28px 32px 24px; }
+  .viewfinder { max-height: 570px; }
+  .dialGroup { padding-top: 21px; }
+}
+@media (max-width: 1100px) {
+  .header, .workspace, .footer { width: calc(100% - 40px); }
+  .cameraBody { grid-template-columns: minmax(0, 1fr) 204px; }
+  .screenSide { padding: 18px 18px 18px; }
+  .controlSide { padding: 20px 17px 0; }
+  .grip { margin-inline: -17px; }
+  .hotShoe { display: none; }
+  .workScene { padding: 42px 24px; }
+  .workDocument h2 { font-size: 28px; margin: 12px 0; }
+  .workDocument p.workLead { font-size: 17px; }
+  .workDocument p { font-size: 13px; }
+  .workDocument pre { font-size: 12px; line-height: 1.5; }
+  .architecture { gap: 9px; }
+  .architecture li { font-size: 13px; }
+  .documentFoot { margin-top: 16px; }
+}
+@media (max-width: 800px) {
+  .cameraBody { grid-template-columns: minmax(0, 1fr); }
+  .header { flex-wrap: wrap; gap: 12px; padding: 19px 0; min-height: 100px; }
+  .wordmark { font-size: 28px; }
+  .identity { padding: 0; border: 0; order: 3; flex-basis: 100%; gap: 0; display: flex; flex-wrap: wrap; gap: 5px 12px; }
+  .profileLinks { gap: 3px; }
+  .profileLinks > * { width: 32px; height: 32px; }
+  .workspace { padding-top: 18px; }
+  .workspaceHeading { font-size: 9px; }
+  .workspaceHeading > span:last-child { display: none; }
+  .topPlate { padding: 12px 18px; min-height: 65px; gap: 14px; }
+  .modeTabs button { padding: 8px 12px; }
+  .topReadout { padding: 5px 10px; gap: 12px; }
+  .topReadout > span { display: none; }
+  .controlSide { border-left: 0; border-top: 1px solid #141918; padding: 16px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; gap: 10px 15px; }
+  .shutterBlock { border-bottom: 0; padding: 0; gap: 11px; }
+  .shutterButton { margin-top: 8px; width: 74px; height: 74px; }
+  .shutterBlock > small { font-size: 10px; text-align: center; }
+  .dialGroup { padding-top: 0; }
+  .dialAssembly { height: 95px; }
+  .dialSteps { gap: 0; }
+  .dialSteps output { min-width: 70px; font-size: 10px; }
+  .dialSteps button { width: 24px; min-width: 24px; }
+  .exposureBlock { grid-column: span 2; padding-top: 10px; margin-top: 0; }
+  .colorModes { margin-top: 10px; }
+  .functionKeys { align-self: center; padding: 6px 0; flex-wrap: wrap; justify-content: center; gap: 7px; }
+  .functionKeys button { width: 34px; height: 34px; }
+  .grip { display: none; }
+  .download { grid-column: 1/-1; margin: 0; }
+  .projectActions { padding-top: 10px; grid-column: span 2; }
+  .underCamera { align-items: flex-start; flex-direction: column; gap: 8px; padding: 16px 0; }
+  .footer { flex-wrap: wrap; align-items: flex-start; }
+  .footer > div { width: 100%; }
+  .footer > a { margin-left: 0; }
+  .previewNote { margin-left: auto; }
+  .workScene { padding: 40px 32px; }
+  .workDocument h2 { font-size: 32px; }
+}
+@media (max-width: 480px) {
+  .header, .workspace, .footer { width: calc(100% - 28px); }
+  .topPlate { padding: 10px 12px; gap: 12px; }
+  .modelName { font-size: 18px; gap: 3px; }
+  .modeTabs { gap: 1px; padding: 3px; }
+  .modeTabs button { gap: 5px; font-size: 11px; padding: 7px 8px; }
+  .modeTabs svg { width: 13px; }
+  .topReadout { padding: 5px 7px; }
+  .topReadout strong { font-size: 16px; }
+  .topReadout small { font-size: 10px; }
+  .screenSide { padding: 12px 12px 15px; }
+  .screenBezel { padding: 5px 5px 0; }
+  .screenFooter { font-size: 7px; padding: 7px 3px; gap: 10px; }
+  .screenFooter > span:first-child { font-size: 8px; }
+  .finderTop, .finderBottom { font-size: 11px; padding: 9px 11px; }
+  .focusBracket { width: 62px; height: 48px; }
+  .frameCaption { padding: 14px 0 16px; }
+  .frameCaption h1 { font-size: 20px; }
+  .frameCaption > div > span { font-size: 9px; }
+  .frameNavigation { gap: 4px; }
+  .frameNavigation button { width: 30px; height: 30px; }
+  .filmstrip { gap: 10px; }
+  .filmFrame { flex-basis: 42%; min-width: 116px; }
+  .filmFrame > span { font-size: 10px; }
+  .collectionCount { font-size: 9px; }
+  .albumTabs { gap: 10px; }
+  .albumTabs button { font-size: 11px; }
+  .controlSide { padding: 14px 10px; gap: 14px 8px; }
+  .dialLabels { font-size: 8px; }
+  .controlLabel { font-size: 9px; }
+  .dial { width: 72px; height: 72px; }
+  .dialAssembly { height: 86px; }
+  .shutterButton { width: 67px; height: 67px; }
+  .dialSteps output { min-width: 54px; font-size: 9px; }
+  .dialSteps button { width: 22px; min-width: 20px; }
+  .exposureBlock label { font-size: 9px; }
+  .functionKeys { gap: 5px; }
+  .functionKeys button { width: 29px; height: 31px; }
+  .underCamera p, .underCamera a { font-size: 10px; }
+  .footer p { font-size: 22px; }
+  .workScene { padding: 40px 22px 34px; align-items: start; overflow-y: auto; }
+  .workDocument h2 { font-size: 25px; margin: 12px 0; }
+  .workDocument p.workLead { font-size: 16px; }
+  .workDocument p { font-size: 13px; }
+  .workTags { font-size: 10px; margin-top: 15px; }
+  .documentLabel { font-size: 8px; }
+  .workDocument pre { font-size: 11px; }
+  .documentFoot { font-size: 9px; }
+  .viewfinder:has(.workScene) { aspect-ratio: 4/5; }
+  .lightbox { padding: 10px; }
+  .lightboxHeader { font-size: 14px; }
+  .enlargedScene:has(.workScene) { aspect-ratio: 4/5; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .page *, .page *::before, .page *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}

@@ -1,7 +1,15 @@
 .env*
 !.env.example
 .next
+.next-verify
+.next-secure-verify
+.next-camera
+.next-architecture
+.next-photos
+.next-photos-dev
+.next-admin
 node_modules
+.npm-cache
 out
 dist
 *.log

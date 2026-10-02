@@ -5,7 +5,10 @@ export const defaultData: PortfolioData = {
     hero: true,
     proof: true,
     focus: true,
+    now: true,
     projects: true,
+    tools: true,
+    journal: true,
     notes: true,
     skills: true,
     experience: true,
@@ -20,18 +23,23 @@ export const defaultData: PortfolioData = {
     projectFaq: true
   },
   profile: {
+    brandName: "DevyFlow",
+    brandLine: "Software, systems, and stories from Varanasi.",
     name: "Devyanshu Agrawal",
     initials: "DA",
     roleLine: "React, Python automation, AI workflows",
-    email: "idevyansh.agr@gmail.com",
+    email: "i.devyanshv@gmail.com",
     github: "https://github.com/Devyl-byte",
     linkedin: "https://www.linkedin.com/in/devyanshuv-agrawal/",
     youtube: "",
-    heroPrefix: "I turn product ideas into",
-    heroWords: ["store dashboards", "WhatsApp automations", "AI/Python workflows", "clear full-stack demos"],
+    heroPrefix: "I build",
+    heroWords: ["backend systems", "useful AI workflows", "clear product interfaces", "tools people can use"],
     heroLead:
-      "I build React interfaces and backend workflows that show the full story: problem, screenshots, demo video, GitHub, decisions, and what the product actually does.",
-    availability: "Open to frontend, full-stack, AI workflow, and freelance builds."
+      "Software engineer working across backend systems, AI workflows, and thoughtful interfaces. Photography is how I document the places, people, and process behind the work.",
+    availability: "Open to backend, full-stack, AI workflow, and selective freelance builds.",
+    currentFocus: "Building dependable backend workflows and turning them into products people can understand.",
+    currentLearning: "Applied AI systems, Python services, evaluation, and production-minded architecture.",
+    currentLocation: "Varanasi, India"
   },
   resume: {
     publicTitle: "Public sanitized resume",
@@ -278,6 +286,83 @@ export const defaultData: PortfolioData = {
       title: "AI and Python learning",
       caption: "Use this for benchmark notes, NLP/Vertex AI work, automation experiments, and things that show momentum.",
       type: "research"
+    }
+  ],
+  tools: [
+    {
+      id: "json-structure-explorer",
+      visible: true,
+      featured: true,
+      status: "published",
+      title: "JSON Structure Explorer",
+      eyebrow: "Developer utility",
+      summary: "Inspect a JSON payload, understand its shape, and generate a readable type outline.",
+      description: "A private, browser-based utility for developers working with unfamiliar API responses. Input stays on the device.",
+      category: "APIs and backend",
+      capabilities: ["Validate JSON", "Explore nested paths", "Infer a TypeScript-like shape"]
+    },
+    {
+      id: "resume-privacy-checker",
+      visible: true,
+      featured: true,
+      status: "published",
+      title: "Resume Privacy Checker",
+      eyebrow: "Career utility",
+      summary: "Check resume text for personal details you may not want to publish publicly.",
+      description: "A simple client-side review for phone numbers, full addresses, identity-document terms, and other sensitive details.",
+      category: "Privacy and careers",
+      capabilities: ["Runs locally", "Highlights risky details", "Provides a publishing checklist"]
+    },
+    {
+      id: "webhook-payload-lab",
+      visible: true,
+      featured: false,
+      status: "published",
+      title: "Webhook Payload Lab",
+      eyebrow: "Integration utility",
+      summary: "Format, inspect, and annotate webhook payloads before wiring them into a service.",
+      description: "A focused workspace for API and automation experiments, including WhatsApp-style event payloads.",
+      category: "Automation",
+      capabilities: ["Format payloads", "Inspect event fields", "Copy normalized JSON"]
+    }
+  ],
+  posts: [
+    {
+      id: "why-devyflow",
+      visible: true,
+      featured: true,
+      status: "published",
+      kind: "note",
+      title: "Why DevyFlow is becoming more than a portfolio",
+      excerpt: "A home for software, useful tools, field notes, and the process behind building them from Varanasi.",
+      body: "I did not want another portfolio made of isolated cards and claims. DevyFlow is becoming a working record: systems I build, tools other people can use, and field notes that preserve the context around the work. The engineering remains central. Photography gives the work a sense of place and memory.",
+      date: "2026-09-30",
+      location: "Varanasi, India"
+    },
+    {
+      id: "building-in-public-with-proof",
+      visible: true,
+      featured: true,
+      status: "published",
+      kind: "build-log",
+      title: "Building in public, with proof",
+      excerpt: "Why screenshots, architecture decisions, demos, and honest limitations matter more than inflated project language.",
+      body: "A useful build log should explain what changed, what failed, and what decision followed. Each project on this platform will grow through screenshots, implementation notes, demonstrations, and links to working code. The goal is not constant posting. It is a clear trail of technical judgment.",
+      date: "2026-09-30",
+      location: "Varanasi, India",
+      relatedProjectId: "store-intelligence"
+    },
+    {
+      id: "photography-as-field-notes",
+      visible: true,
+      featured: true,
+      status: "published",
+      kind: "photography",
+      title: "Photography as field notes",
+      excerpt: "Images will document where ideas came from, what I was learning, and the atmosphere around the build.",
+      body: "The photography here is not a separate portfolio competing with software engineering. It is the visual record around it: events, streets, workspaces, experiments, and moments of attention. Every image should carry a caption and a reason to be here.",
+      date: "2026-09-30",
+      location: "Varanasi, India"
     }
   ],
   skills: {

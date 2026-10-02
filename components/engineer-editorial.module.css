@@ -1,0 +1,44 @@
+.work { padding: 36px 0 48px; border-top: 1px solid var(--line); }
+.heading { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 24px; }
+.heading h2 { font-size: 24px; font-weight: 550; }
+.heading > span { font: 10px/1.6 Consolas, monospace; color: var(--muted); }
+.projects { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 24px; }
+.project { border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: var(--surface); display: flex; flex-direction: column; min-width: 0; }
+.coverLink { display: block; }
+.coverLink > div { min-height: 230px; height: 230px; }
+.storeCover { background: #e1e8e9; color: #263f43; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; }
+.coverLabel { font: 10px/1.5 Consolas, monospace; }
+.storeFlow { display: grid; grid-template-columns: 1fr 18px 1fr 18px 1fr; align-items: center; gap: 12px; }
+.storeFlow > div { display: grid; justify-items: center; gap: 12px; }
+.storeFlow strong { font-size: 14px; font-weight: 500; }
+.coverFoot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; font: 10px/1.5 Consolas,monospace; }
+.projectBody { padding: 24px; display: flex; flex: 1; flex-direction: column; }
+.role { font-size: 13px; color: var(--accent); }
+.projectBody h3 { font-size: 28px; font-weight: 550; line-height: 1.25; margin: 10px 0 14px !important; }
+.projectBody p { font-size: 16px; line-height: 1.65; color: var(--muted); }
+.projectBody p.ownership { margin-top: 16px; color: var(--fg); font-size: 15px; }
+.projectTech { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 20px 0 24px; font: 12px/1.6 Consolas,monospace; color: var(--muted); }
+.projectActions { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; margin-top: auto; padding-top: 16px; border-top: 1px solid var(--line); }
+.projectActions a,.toolActions a,.toolActions button { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; min-height: 44px; }
+.tools { padding: 36px 0 48px; border-top: 1px solid var(--line); }
+.toolRow { display: grid; grid-template-columns: 38px minmax(0,1fr) auto; gap: 20px; align-items: center; padding: 24px 0; border-bottom: 1px solid var(--line); }
+.toolRow > svg { color: var(--accent); }
+.toolRow h3 { font-size: 20px; font-weight: 550; }
+.toolRow p { font-size: 15px; color: var(--muted); margin-top: 7px !important; }
+.toolActions { display: flex; flex-wrap: wrap; gap: 20px; }
+.toolActions button { padding: 0; color: var(--fg); background: transparent; border: 0; }
+.contact { border-top: 1px solid var(--line); padding: 42px 0; display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.contact h2 { font-size: 27px; font-weight: 500; }
+.contact p { color: var(--muted); font-size: 15px; margin-top: 14px !important; max-width: 420px; }
+.emailRow { display: flex; gap: 12px; align-items: center; }
+.emailRow > a { overflow-wrap: anywhere; font-size: 18px; }
+.emailRow button { flex-shrink: 0; width: 44px; height: 44px; display: grid; place-items: center; background: var(--surface); color: var(--fg); border: 1px solid var(--line); border-radius: 4px; }
+.emailAction { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin-top: 8px; font-size: 14px; }
+.copyStatus { display: block; min-height: 24px; margin-top: 6px; font-size: 13px; color: var(--muted); }
+.decision { padding: 32px 0; border-top: 1px solid var(--line); display: grid; grid-template-columns: 1fr 1.5fr; gap: 36px; }
+.decision h2 { font-size: 26px; line-height: 1.3; font-weight: 500; margin-top: 10px !important; }
+.decisionLabel { font: 11px/1.6 Consolas,monospace; color: var(--accent); }
+.decision p { font-size: 15px; line-height: 1.75; color: var(--muted); margin-bottom: 15px !important; }
+.decision a { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-size: 14px; }
+@media(max-width:900px) { .projects { grid-template-columns: 1fr; }.coverLink > div { height: 240px; }.toolRow { grid-template-columns: 32px minmax(0,1fr); }.toolActions { grid-column: 2; } }
+@media(max-width:760px) { .work,.tools { padding: 28px 0 36px; }.heading h2 { font-size: 22px; }.projectBody { padding: 20px; }.projectBody h3 { font-size: 25px; }.storeCover { padding: 20px; }.contact,.decision { grid-template-columns: 1fr; gap: 22px; padding: 32px 0; }.contact h2,.decision h2 { font-size: 24px; }.emailRow > a { font-size: 16px; }.toolRow { gap: 12px; } }

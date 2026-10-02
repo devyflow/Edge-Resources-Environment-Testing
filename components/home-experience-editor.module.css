@@ -1,0 +1,31 @@
+.editor { display: grid; gap: 34px; margin-top: 30px; }
+.editor section { padding-bottom: 30px; border-bottom: 1px solid #c9cbc5; }
+.editor header { display: flex; align-items: center; gap: 12px; }
+.editor header > span { color: #2b6fce; font: 0.7rem ui-monospace, monospace; }
+.editor header div { display: grid; gap: 3px; }
+.editor header small { color: #69706b; }
+.fields,
+.sceneFields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 18px; }
+.fields label,
+.sceneFields label { display: grid; gap: 7px; font-weight: 700; }
+.fields input,
+.sceneFields input { width: 100%; min-height: 42px; border: 1px solid #b9bdb7; border-radius: 4px; background: white; padding: 0 11px; }
+.scenes { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 18px; }
+.scenes article { border: 1px solid #c9cbc5; border-radius: 6px; background: #e7e8e2; padding: 12px; }
+.image { position: relative; min-height: 210px; display: grid; place-items: center; overflow: hidden; background: #111513; color: #7c847f; }
+.image img { width: 100%; height: 260px; border: 0; object-fit: cover; }
+.image > span { position: absolute; left: 10px; top: 10px; color: white; font: 0.66rem ui-monospace, monospace; }
+.sceneFields .wide { grid-column: 1 / -1; }
+.upload { min-height: 38px; display: inline-flex; align-items: center; gap: 7px; margin-top: 12px; border: 1px solid #b9bdb7; border-radius: 4px; padding: 0 11px; cursor: pointer; font-weight: 700; }
+.upload input { display: none; }
+.status { min-height: 22px; margin-top: 8px; color: #2b6fce; }
+
+@media (max-width: 800px) {
+  .scenes { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 560px) {
+  .fields,
+  .sceneFields { grid-template-columns: 1fr; }
+  .sceneFields .wide { grid-column: auto; }
+}
