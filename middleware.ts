@@ -4,13 +4,12 @@ import { NextResponse, type NextRequest } from "next/server";
 const isDevelopmentLocalStudio =
   process.env.NODE_ENV !== "production" && process.env.NEXT_PUBLIC_CONTENT_MODE === "local";
 
-function contentSecurityPolicy(nonce: string) {
+function contentSecurityPolicy() {
   const developmentScript = process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : "";
   return [
     "default-src 'self'",
-    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${developmentScript}`,
-    `style-src-elem 'self' 'nonce-${nonce}'`,
-    "style-src-attr 'unsafe-inline'",
+    `script-src 'self' 'unsafe-inline'${developmentScript}`,
+    "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: blob: https:",
     "font-src 'self' data:",
     "media-src 'self' data: blob:",
@@ -44,10 +43,8 @@ function redirectWithCookies(url: URL, source: NextResponse, csp: string) {
 }
 
 export async function middleware(request: NextRequest) {
-  const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
-  const csp = contentSecurityPolicy(nonce);
+  const csp = contentSecurityPolicy();
   const requestHeaders = new Headers(request.headers);
-  requestHeaders.set("x-nonce", nonce);
   requestHeaders.set("Content-Security-Policy", csp);
 
   let response = NextResponse.next({ request: { headers: requestHeaders } });
