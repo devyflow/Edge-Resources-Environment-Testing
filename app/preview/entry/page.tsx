@@ -1,3 +1,3 @@
-import EntryWelcome from "@/components/entry-welcome";
+import { redirect } from "next/navigation";
 
-export default function EntryPage() { return <EntryWelcome />; }
+export default function EntryPage() { redirect("/"); }

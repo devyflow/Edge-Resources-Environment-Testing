@@ -4,17 +4,17 @@ import { defaultData } from "./default-data";
 import type { PortfolioData } from "./types";
 import { validateEngineerProjects } from "./engineer-project-store";
 import { validatePhotography } from "./photography-content";
+import { validateEngineering } from "./engineering-content";
 import { getSupabaseBrowserClient } from "./supabase-browser";
+import { cloneData, mergeData } from "./portfolio-data-shared";
+
+export { cloneData, mergeData };
 
 const dataKey = "devyanshu-portfolio-data-v2";
 const passHashKey = "devyanshu-admin-pass-hash-v2";
 const sessionKey = "devyanshu-admin-session-v2";
 const contentRowId = "main";
 const defaultBucket = "portfolio-assets";
-
-export function cloneData(data: PortfolioData): PortfolioData {
-  return JSON.parse(JSON.stringify(data)) as PortfolioData;
-}
 
 export function loadLocalData(): PortfolioData {
   if (typeof window === "undefined") return cloneData(defaultData);
@@ -30,6 +30,7 @@ export function loadLocalData(): PortfolioData {
 export function saveLocalData(data: PortfolioData) {
   if (data.engineerProjects) validateEngineerProjects(data.engineerProjects);
   if (data.photography) validatePhotography(data.photography);
+  if (data.engineering) validateEngineering(data.engineering);
   window.localStorage.setItem(dataKey, JSON.stringify(data));
   window.dispatchEvent(new Event("portfolio-content-updated"));
 }
@@ -46,20 +47,6 @@ export function shouldUseSupabaseContent() {
 
 export function isLocalStudioMode() {
   return process.env.NODE_ENV !== "production" && !shouldUseSupabaseContent();
-}
-
-export function mergeData(base: PortfolioData, incoming: Partial<PortfolioData>) {
-  return {
-    ...base,
-    ...incoming,
-    sections: { ...base.sections, ...(incoming.sections || {}) },
-    profile: { ...base.profile, ...(incoming.profile || {}) },
-    resume: { ...base.resume, ...(incoming.resume || {}) },
-    projects: Array.isArray(incoming.projects) ? incoming.projects : base.projects,
-    notes: Array.isArray(incoming.notes) ? incoming.notes : base.notes,
-    skills: { ...base.skills, ...(incoming.skills || {}) },
-    experience: Array.isArray(incoming.experience) ? incoming.experience : base.experience
-  };
 }
 
 export function slugify(value: string) {
@@ -136,6 +123,7 @@ export async function saveSupabaseData(content: PortfolioData) {
   if (!supabase) throw new Error("Supabase is not configured.");
   if (content.engineerProjects) validateEngineerProjects(content.engineerProjects);
   if (content.photography) validatePhotography(content.photography);
+  if (content.engineering) validateEngineering(content.engineering);
   const { error } = await supabase.from("portfolio_content").upsert({ id: contentRowId, content, updated_at: new Date().toISOString() });
   if (error) throw error;
   window.dispatchEvent(new Event("portfolio-content-updated"));

@@ -16,6 +16,7 @@ import {
   Upload
 } from "lucide-react";
 import EngineerProjectEditor from "@/components/engineer-project-editor";
+import EngineeringToolsEditor from "@/components/engineering-tools-editor";
 import HomeExperienceEditor from "@/components/home-experience-editor";
 import PhotographyEditor from "@/components/photography-editor";
 import {
@@ -36,15 +37,16 @@ import { defaultData } from "@/lib/default-data";
 import { initialEngineerProjects } from "@/lib/engineer-project-store";
 import { initialHomeExperience } from "@/lib/home-content";
 import { initialPhotography, normalizePhotography } from "@/lib/photography-content";
+import { initialEngineeringContent, normalizeEngineering } from "@/lib/engineering-content";
 import type { PortfolioData } from "@/lib/types";
 import s from "./admin.module.css";
 
 type StudioTab = "home" | "engineering" | "photography";
 
 const destinations = [
-  { id: "home" as const, label: "Home", path: "/preview/entry", icon: Home, note: "Entry experience" },
-  { id: "engineering" as const, label: "Engineering", path: "/preview/entry/work", icon: Code2, note: "Projects and contact" },
-  { id: "photography" as const, label: "Photography", path: "/preview/entry/personal", icon: Camera, note: "Archive and profile" }
+  { id: "home" as const, label: "Home", path: "/", icon: Home, note: "Entry experience" },
+  { id: "engineering" as const, label: "Engineering", path: "/engineering", icon: Code2, note: "Projects, tools, and contact" },
+  { id: "photography" as const, label: "Photography", path: "/photography", icon: Camera, note: "Archive and profile" }
 ];
 
 function completeData(data: PortfolioData): PortfolioData {
@@ -52,6 +54,7 @@ function completeData(data: PortfolioData): PortfolioData {
     ...data,
     homeExperience: data.homeExperience ?? initialHomeExperience(),
     engineerProjects: data.engineerProjects ?? initialEngineerProjects(),
+    engineering: normalizeEngineering(data.engineering ?? initialEngineeringContent()),
     photography: normalizePhotography(data.photography)
   };
 }
@@ -91,7 +94,7 @@ function LoginScreen({ onSignedIn }: { onSignedIn: () => void }) {
         {creating && <label><span>Confirm passcode</span><input type="password" value={confirmation} onChange={(event) => setConfirmation(event.target.value)} required /></label>}
         {status && <p className={s.error} role="alert">{status}</p>}
         <button type="submit"><Lock size={17} />{creating ? "Create and enter" : "Enter studio"}</button>
-        <Link href="/preview/entry"><Eye size={16} />Open current experience</Link>
+        <Link href="/"><Eye size={16} />Open current experience</Link>
       </form>
     </main>
   );
@@ -187,6 +190,7 @@ export default function AdminPage() {
   if (!signedIn) return remoteMode ? <main className={s.loading}>Verifying secure session...</main> : <LoginScreen onSignedIn={() => setSignedInState(true)} />;
 
   const engineeringProjects = data.engineerProjects ?? initialEngineerProjects();
+  const engineering = normalizeEngineering(data.engineering);
   const homeExperience = data.homeExperience ?? initialHomeExperience();
   const photography = normalizePhotography(data.photography);
   const activeIndex = destinations.findIndex((item) => item.id === tab);
@@ -196,7 +200,7 @@ export default function AdminPage() {
   return (
     <div className={s.studio} data-area={tab}>
       <header className={s.topbar}>
-        <Link className={s.brand} href="/preview/entry"><Aperture size={25} /><span>DevyFlow Studio</span></Link>
+        <Link className={s.brand} href="/"><Aperture size={25} /><span>DevyFlow Studio</span></Link>
         <div className={s.topActions}>
           <span className={s.saveState} data-dirty={status === "Unsaved changes"}>{status}</span>
           <button type="button" onClick={() => void saveAll()}><Save size={17} />Save all</button>
@@ -236,7 +240,9 @@ export default function AdminPage() {
           {tab === "engineering" && <section className={s.contentPanel}>
             <header className={s.panelHeader}><div><span className={s.eyebrow}>THE ENGINEER</span><h1>Engineering portfolio.</h1><p>These controls feed the current selected-work cards and case-study pages.</p></div><Code2 size={54} strokeWidth={1} /></header>
             <div className={s.connectedField}><label><span>Public contact email</span><input type="email" value={data.profile.email} onChange={(event) => updateData((draft) => { draft.profile.email = event.target.value; })} /></label><small>Used by the Contact navigation, email link, and copy button.</small></div>
+            <div className={s.connectedField}><label><span>Default engineering theme</span><select value={engineering.defaultTheme} onChange={(event) => updateData((draft) => { draft.engineering = { ...normalizeEngineering(draft.engineering), defaultTheme: event.target.value as "light" | "dark" }; })}><option value="light">Light</option><option value="dark">Dark</option></select></label><small>First-time visitors see this theme. Their own engineering preference is remembered afterward.</small></div>
             <EngineerProjectEditor value={engineeringProjects} onChange={(items) => updateData((draft) => { draft.engineerProjects = items; })} />
+            <EngineeringToolsEditor value={engineering} onChange={(value) => updateData((draft) => { draft.engineering = value; })} />
           </section>}
 
           {tab === "photography" && <section className={`${s.contentPanel} ${s.photoPanel}`}>

@@ -7,16 +7,17 @@ import StoreArchitecture from "@/components/store-architecture";
 import ProjectQuestions from "@/components/project-questions";
 import s from "@/components/entry-experience.module.css";
 import e from "@/components/engineer-editorial.module.css";
+import type { EngineerProject } from "@/lib/engineer-project-store";
 
-export default function EngineerProjectPage({ slug }: { slug: string }) {
-  const { projects, ready } = useEngineerProjects();
+export default function EngineerProjectPage({ slug, initialProjects }: { slug: string; initialProjects?: EngineerProject[] }) {
+  const { projects, ready } = useEngineerProjects(initialProjects);
   const engineerProjects = projects.filter(project => project.visible);
   if (!ready) return <main className={s.engineer}><p>Loading project...</p></main>;
   const project = engineerProjects.find((item) => item.slug === slug);
-  if (!project) return <main className={s.engineer}><h1>Project unavailable</h1><Link href="/preview/entry/work">Back to projects</Link></main>;
+  if (!project) return <main className={s.engineer}><h1>Project unavailable</h1><Link href="/engineering">Back to projects</Link></main>;
   const next = engineerProjects[(engineerProjects.indexOf(project) + 1) % engineerProjects.length];
   return <main className={`${s.engineer} ${s.casePage}`}>
-    <header className={s.workHeader}><Link className={s.brand} href="/preview/entry">devyflow<span>.</span></Link><Link href="/preview/entry/work#selected-work"><ArrowLeft size={17} />Selected work</Link></header>
+    <header className={s.workHeader}><Link className={s.brand} href="/engineering">devyflow<span>.</span></Link><Link href="/engineering#selected-work"><ArrowLeft size={17} />Selected work</Link></header>
     <section className={s.caseIntro}>
       <span className={s.kicker}>{project.role || "CASE STUDY IN PREPARATION"}{project.period && ` / ${project.period}`}</span>
       <h1>{project.name}</h1><p>{project.summary}</p>
@@ -29,6 +30,6 @@ export default function EngineerProjectPage({ slug }: { slug: string }) {
       <section id="architecture" className={s.caseArchitecture}><div className={s.sectionHeading}><h2>{project.architecture ? "Architecture" : "Workflow"}</h2><span>{project.architecture ? "CORE COMPONENTS" : "TEXT TO IMAGE"}</span></div>{slug === "chit-chat-with-food" ? <ChitChatOverview /> : slug === "store-intelligence" ? <StoreArchitecture /> : <ol className={s.projectWorkflow}>{project.workflow.map((step, index) => <li key={step}><span>{String(index + 1).padStart(2, "0")}</span><strong>{step}</strong>{index < project.workflow.length - 1 && <ArrowRight size={18} />}</li>)}</ol>}{project.architecture && <p>{project.architecture}</p>}</section>
       {project.decision.title && <section className={e.decision} aria-labelledby="decision-heading"><div><span className={e.decisionLabel}>AN IMPLEMENTATION DECISION</span><h2 id="decision-heading">{project.decision.title}</h2></div><div><p>{project.decision.detail}</p>{project.decision.tradeoff && <p><strong>Trade-off. </strong>{project.decision.tradeoff}</p>}{project.decision.url && <a href={project.decision.url}>{project.decision.label}<ArrowUpRight size={16} /></a>}</div></section>}
       {project.faq.length > 0 && <ProjectQuestions name={project.name} questions={project.faq} sourceUrl={project.sourceUrl} liveUrl={project.liveUrl} />}
-    <footer className={s.workFooter}><Link href="/preview/entry/work#selected-work"><ArrowLeft size={16} />Back to projects</Link><Link href={`/preview/entry/work/${next.slug}`}>{next.name}<ArrowRight size={16} /></Link></footer>
+    <footer className={s.workFooter}><Link href="/engineering#selected-work"><ArrowLeft size={16} />Back to projects</Link><Link href={`/engineering/${next.slug}`}>{next.name}<ArrowRight size={16} /></Link></footer>
   </main>;
 }

@@ -1,2 +1,2 @@
-import EngineerPreview from "@/components/engineer-preview";
-export default function WorkPreviewPage() { return <EngineerPreview />; }
+import { redirect } from "next/navigation";
+export default function LegacyEngineeringPage() { redirect("/engineering"); }

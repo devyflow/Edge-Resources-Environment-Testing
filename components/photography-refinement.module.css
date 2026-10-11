@@ -2,6 +2,7 @@
 .archive.archive > header { background:transparent; min-height:88px; gap:20px; }
 .archive.archive > header h1 { font-family:"Segoe UI",Arial,sans-serif; font-size:28px; font-weight:500; }
 .archive.archive > header > div > span { font:12px/1.6 Consolas,monospace; color:var(--muted); }
+.archive.archive > header > a { width:auto; min-width:44px; padding-inline:8px; display:flex; align-items:center; justify-content:center; gap:8px; font:11px Consolas,monospace; text-transform:uppercase; }
 .archive.archive > div:first-of-type { padding-block:18px; border-bottom:1px solid var(--line); margin-bottom:24px; }
 .archive.archive .dial { width:72px; height:72px; display:block; padding:4px; }
 .archive.archive .dial svg { width:29px; height:29px; }
@@ -26,6 +27,8 @@
   .archive.archive > header { min-height:80px; gap:8px; }
   .archive.archive > header h1 { font-size:23px; }
   .archive.archive > header > div > span { font-size:11px; }
+  .archive.archive > header > a { width:44px; padding:0; }
+  .archive.archive > header > a span { display:none; }
   .archive.archive .dial { width:56px; height:56px; padding:3px; }
   .archive.archive .dial svg { width:23px; height:23px; }
   .archive.archive > div:first-of-type { padding-block:12px; margin-bottom:18px; }

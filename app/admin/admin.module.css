@@ -104,7 +104,8 @@
 
 .connectedField { display: grid; grid-template-columns: minmax(260px, 520px) 1fr; align-items: end; gap: 16px; padding: 24px 0; border-bottom: 1px solid #c9cbc5; }
 .connectedField label { display: grid; gap: 8px; font-weight: 750; }
-.connectedField input { min-height: 42px; border: 1px solid #b9bdb7; border-radius: 4px; background: white; padding: 0 12px; }
+.connectedField input,
+.connectedField select { min-height: 42px; border: 1px solid #b9bdb7; border-radius: 4px; background: white; padding: 0 12px; }
 .connectedField small { color: #69706b; line-height: 1.5; }
 
 .contentPanel > :global(.admin-form) { margin-top: 30px; }

@@ -7,7 +7,13 @@
 .next-architecture
 .next-photos
 .next-photos-dev
+.next-visual
+.next-live
+.next-admincheck
+.next-session
 .next-admin
+.chrome-qa*
+qa-mobile-*.png
 node_modules
 .npm-cache
 out

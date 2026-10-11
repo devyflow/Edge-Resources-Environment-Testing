@@ -2,16 +2,18 @@
 
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Aperture, ArrowDownRight, ArrowRight, Camera, ChevronLeft, ChevronRight, Code2 } from "lucide-react";
 import { useExperience } from "./entry-experience-shell";
 import { useHomeContent } from "./use-home-content";
+import type { HomeExperienceContent } from "@/lib/home-content";
 import s from "./entry-experience.module.css";
 
-export default function EntryWelcome() {
-  const content = useHomeContent();
+export default function EntryWelcome({ initialContent }: { initialContent?: HomeExperienceContent }) {
+  const content = useHomeContent(initialContent);
   const destinations = useMemo(() => content.destinations.map((item) => ({
     ...item,
-    href: item.id === "engineering" ? "/preview/entry/work" : "/preview/entry/personal",
+    href: item.id === "engineering" ? "/engineering" : "/photography",
     icon: item.id === "engineering" ? Code2 : Camera
   })), [content.destinations]);
   const [selected, setSelected] = useState(0);
@@ -43,7 +45,7 @@ export default function EntryWelcome() {
         <img className={s.engineerScene} src={destinations[0].scene} alt="" />
         <img className={s.personalScene} src={destinations[1].scene} alt="" />
       </div>
-      <header className={s.welcomeHeader}><a href="/preview/entry" className={s.brand}>{content.brand}<span>.</span></a><span className={s.edition}>{content.edition}</span><span className={s.liveLabel}><i /> {content.readyLabel}</span></header>
+      <header className={s.welcomeHeader}><a href="/" className={s.brand}>{content.brand}<span>.</span></a><span className={s.edition}>{content.edition}</span><nav className={s.welcomeQuickLinks} aria-label="Portfolio"><Link href="/engineering">Work</Link><Link href="/photography">Photography</Link></nav><span className={s.liveLabel}><i /> {content.readyLabel}</span></header>
       <div className={s.welcomeBody}>
         <div className={s.welcomeCopy}>
           <span className={s.kicker}>{content.kicker}</span>
@@ -82,7 +84,7 @@ export default function EntryWelcome() {
           </div>
           <div className={s.destination} aria-live="polite"><span>{destination.caption}</span><h2>{destination.title}</h2><p>{destination.detail}</p></div>
           <button type="button" className={s.enterButton} onClick={() => enter(destination.href)}><span className={s.release}><Aperture size={20} /></span><span>Enter {destination.title}</span><ArrowRight size={18} /></button>
-          <div className={s.directChoices} role="group" aria-label="Experience shortcuts">{destinations.map((item, i) => <button key={item.href} type="button" aria-pressed={i === selected} onClick={() => change(i)}><item.icon size={13} />{i ? "Personal" : "Professional"}</button>)}</div>
+          <nav className={s.directChoices} aria-label="Direct portfolio links">{destinations.map((item, i) => <Link key={item.href} href={item.href}><item.icon size={13} />{i ? "Open photography" : "Open engineering"}</Link>)}</nav>
         </div>
       </div>
       <div className={s.welcomeFooter}><span><Aperture size={14} /> TWO PERSPECTIVES. SAME PERSON.</span>{destination.creditUrl ? <a href={destination.creditUrl} target="_blank" rel="noreferrer">Reference photo / {destination.creditLabel}</a> : <span>Photo / {destination.creditLabel}</span>}</div>

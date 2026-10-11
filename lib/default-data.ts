@@ -1,6 +1,8 @@
 import type { PortfolioData } from "./types";
+import { initialEngineeringContent } from "./engineering-content";
 
 export const defaultData: PortfolioData = {
+  engineering: initialEngineeringContent(),
   sections: {
     hero: true,
     proof: true,

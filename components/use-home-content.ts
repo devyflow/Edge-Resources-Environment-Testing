@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { loadPortfolioData } from "@/lib/content-store";
-import { initialHomeExperience } from "@/lib/home-content";
+import { initialHomeExperience, type HomeExperienceContent } from "@/lib/home-content";
 
-export function useHomeContent() {
-  const [content, setContent] = useState(initialHomeExperience);
+export function useHomeContent(initial?: HomeExperienceContent) {
+  const [content, setContent] = useState(() => initial ?? initialHomeExperience());
 
   useEffect(() => {
     const sync = async () => {

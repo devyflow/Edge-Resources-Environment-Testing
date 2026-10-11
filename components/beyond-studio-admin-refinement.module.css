@@ -1,0 +1,5 @@
+.toggle > span { font: inherit; color: var(--ink); text-transform: none; }
+
+@media (max-width: 720px) {
+  .primary > span { display: none; }
+}

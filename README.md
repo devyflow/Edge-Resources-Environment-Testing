@@ -35,10 +35,14 @@ NEXT_PUBLIC_CONTENT_MODE=supabase
 NEXT_PUBLIC_SUPABASE_ASSET_BUCKET=portfolio-assets
 NEXT_PUBLIC_ADMIN_EMAIL=idevyansh.agr@gmail.com
 SUPABASE_ADMIN_USER_ID=the-auth-user-uuid
+RESEND_API_KEY=your-resend-api-key
+PHOTO_REQUEST_FROM_EMAIL=DevyFlow <requests@your-verified-domain.com>
 ```
 
 `SUPABASE_ADMIN_USER_ID` is server-only. Do not prefix it with `NEXT_PUBLIC_`.
 Never expose the Supabase service-role key in this application.
+
+The two Resend variables are server-only and deliver the compact "Request this frame" form. Verify the sending domain in Resend, then use an address on that domain for `PHOTO_REQUEST_FROM_EMAIL`. Without them, the form opens the visitor's email app with the frame code and page link already filled in.
 
 The database policies require the allowlisted user ID and an `aal2` MFA session
 for content or asset writes. `/admin` checks the same conditions before rendering.

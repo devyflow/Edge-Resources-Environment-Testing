@@ -1,11 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
 import { loadPortfolioData } from "@/lib/content-store";
-import { initialEngineerProjects, validateEngineerProjects } from "@/lib/engineer-project-store";
+import { initialEngineerProjects, validateEngineerProjects, type EngineerProject } from "@/lib/engineer-project-store";
 
-export function useEngineerProjects() {
-  const [projects, setProjects] = useState(initialEngineerProjects);
-  const [ready, setReady] = useState(false);
+export function useEngineerProjects(initial?: EngineerProject[]) {
+  const [projects, setProjects] = useState<EngineerProject[]>(() => initial ?? initialEngineerProjects());
+  const [ready, setReady] = useState(initial !== undefined);
   useEffect(() => {
     async function sync() {
       try {

@@ -1,7 +1,2 @@
-import PhotographyFeed from "@/components/photography-feed";
-
-export default function PersonalPreviewPage() {
-  return <div style={{ background: "var(--paper)", color: "var(--fg)" }}>
-    <PhotographyFeed />
-  </div>;
-}
+import { redirect } from "next/navigation";
+export default function LegacyPhotographyPage() { redirect("/photography"); }

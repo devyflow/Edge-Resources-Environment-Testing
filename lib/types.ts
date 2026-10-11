@@ -144,6 +144,7 @@ export type SectionVisibility = {
 export type PortfolioData = {
   homeExperience?: import("./home-content").HomeExperienceContent;
   photography?: import("./photography-content").PhotographyContent;
+  engineering?: import("./engineering-content").EngineeringContent;
   engineerProjects?: import("./engineer-project-store").EngineerProject[];
   sections: SectionVisibility;
   profile: Profile;

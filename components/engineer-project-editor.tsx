@@ -22,7 +22,7 @@ export default function EngineerProjectEditor({ value, onChange }: { value?: Eng
       const slug = `project-${Date.now()}`;
       const next: EngineerProject = { slug, name: "New project", role: "", period: "", summary: "", stack: [], contributions: [], sourceUrl: "", liveUrl: "", overviewTitle: "Overview", overview: "", technicalFocus: "", architecture: "", workflow: [], faq: [], decision: { title: "", detail: "", tradeoff: "", url: "", label: "Inspect implementation" }, visible: true, selected: true, cover: "generic" };
       onChange([...items, next]); setActive(slug);
-    }}><Plus size={17} />Add project</button><a className="button secondary" href="/preview/entry/work">Open Engineer preview</a></div>
+    }}><Plus size={17} />Add project</button><a className="button secondary" href="/engineering">Open Engineer preview</a></div>
     <label className="field"><span>Project</span><select value={project?.slug ?? ""} onChange={event => setActive(event.target.value)}>{items.map((item, i) => <option value={item.slug} key={item.slug}>{i + 1}. {item.name}{!item.visible ? " (hidden)" : ""}</option>)}</select></label>
     {project && <>
       <div className="inline-actions"><button className="button secondary" type="button" disabled={index === 0} onClick={() => move(index, index - 1)} title="Move earlier"><ArrowUp size={17} />Earlier</button><button className="button secondary" type="button" disabled={index === items.length - 1} onClick={() => move(index, index + 1)} title="Move later"><ArrowDown size={17} />Later</button><button className="button secondary" type="button" onClick={() => {
@@ -30,7 +30,7 @@ export default function EngineerProjectEditor({ value, onChange }: { value?: Eng
       }}><Star size={17} />Make default</button><button className="button secondary" type="button" onClick={() => { if (window.confirm(`Remove ${project.name} from this preview? Save all applies the removal.`)) { onChange(items.filter((_, i) => i !== index)); setActive(""); } }}><Trash2 size={17} />Remove</button></div>
       <label><input type="checkbox" checked={project.visible} onChange={event => patch({ visible: event.target.checked })} /> Visible in preview</label>
       <label><input type="checkbox" checked={project.selected} onChange={event => patch({ selected: event.target.checked })} /> Include in Selected work</label>
-      <p>Page address: /preview/entry/work/{project.slug}</p>
+      <p>Page address: /engineering/{project.slug}</p>
       <div className="admin-form-grid">{field("Project name", "name")}{field("Your role", "role")}{field("Period", "period")}{field("GitHub / source URL", "sourceUrl")}{field("Live project URL", "liveUrl")}</div>
       {field("Card summary", "summary", true)}
       <label className="field"><span>Card cover</span><select value={project.cover} onChange={event => patch({ cover: event.target.value as EngineerProject["cover"] })}><option value="generic">Generic project cover</option><option value="store">Store Intelligence diagram (fixed architecture)</option><option value="food">CraveNChat diagram (fixed architecture)</option></select></label>
