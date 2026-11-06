@@ -44,12 +44,20 @@ function redirectWithCookies(url: URL, source: NextResponse, csp: string) {
 
 export async function middleware(request: NextRequest) {
   const csp = contentSecurityPolicy();
+  const pathname = request.nextUrl.pathname;
+  if (pathname.toLowerCase().startsWith("/admin") && !pathname.startsWith("/admin")) {
+    const destination = request.nextUrl.clone();
+    destination.pathname = pathname.replace(/^\/admin/i, "/admin");
+    return secureHeaders(NextResponse.redirect(destination), csp);
+  }
+
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("Content-Security-Policy", csp);
 
   let response = NextResponse.next({ request: { headers: requestHeaders } });
-  const isAdminRoute = request.nextUrl.pathname.startsWith("/admin");
-  if (!isAdminRoute || isDevelopmentLocalStudio) return secureHeaders(response, csp);
+  const isAdminRoute = pathname.startsWith("/admin");
+  const isPublicAdminAsset = pathname === "/admin/manifest.webmanifest";
+  if (!isAdminRoute || isPublicAdminAsset || isDevelopmentLocalStudio) return secureHeaders(response, csp);
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;

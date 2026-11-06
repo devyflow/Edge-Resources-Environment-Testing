@@ -1,5 +1,5 @@
-const CACHE_NAME = "devyflow-studio-shell-v1";
-const STATIC_ASSETS = ["/icon.svg", "/studio-icon-192.png", "/studio-icon-512.png", "/manifest.webmanifest"];
+const CACHE_NAME = "devyflow-studio-shell-v2";
+const STATIC_ASSETS = ["/icon.svg", "/studio-icon-192.png", "/studio-icon-512.png", "/admin/manifest.webmanifest"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_ASSETS)));
