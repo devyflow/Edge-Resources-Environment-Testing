@@ -154,6 +154,7 @@ export default function AdminLoginPage() {
 
         {(status || unauthorized) && <p className={s.error} role="alert">{status || "That account is authenticated but is not the configured portfolio administrator."}</p>}
         <button type="submit" disabled={busy}>{step === "credentials" ? <Lock size={17} /> : <KeyRound size={17} />}{busy ? "Checking..." : step === "credentials" ? "Continue securely" : "Verify and enter"}</button>
+        {step === "credentials" && <Link href="/admin/forgot-password">Forgot password?</Link>}
         {step !== "credentials" && <button type="button" className={s.secondaryLoginAction} onClick={() => void changeAccount()}><LogOut size={16} />Use another account</button>}
         <Link href="/">Return to the portfolio</Link>
       </form>

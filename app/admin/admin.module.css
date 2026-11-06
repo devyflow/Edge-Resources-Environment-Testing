@@ -157,6 +157,7 @@
 .loginPanel button:disabled { cursor: wait; opacity: 0.62; }
 .loginPanel .secondaryLoginAction { background: transparent; border-color: #3b423f; }
 .loginPanel .error { color: #ff8d82; }
+.loginPanel.recoveryPanel h1 { font-size: 2rem; line-height: 1.15; }
 .qrFrame { display: grid; place-items: center; padding: 16px; background: white; border-radius: 4px; }
 .qrFrame img { display: block; width: min(240px, 100%); height: auto; }
 .mfaSecret { overflow-wrap: anywhere; padding: 12px; border: 1px solid #3b423f; background: #0d100f; color: #eef0eb; text-align: center; }

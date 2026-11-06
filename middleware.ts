@@ -62,7 +62,7 @@ export async function middleware(request: NextRequest) {
   if (!isAdminRoute || isPublicAdminAsset || isDevelopmentLocalStudio) return secureHeaders(response, csp);
   response.headers.set("Cache-Control", "private, no-store");
   // The public login form must remain reachable when session refresh is unavailable.
-  if (pathname === "/admin/login") return secureHeaders(response, csp);
+  if (["/admin/login", "/admin/forgot-password", "/admin/reset-password"].includes(pathname)) return secureHeaders(response, csp);
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
