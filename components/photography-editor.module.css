@@ -1,4 +1,11 @@
-.editor { display: grid; gap: 28px; margin-top: 30px; }
+.editor { display: grid; gap: 28px; margin-top: 30px; padding: 0; border: 0; min-width: 0; }
+.photoActions { display: flex; flex-wrap: wrap; gap: 10px; }
+.photoActions button, .photoActions a { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; border: 1px solid #171a18; border-radius: 4px; padding: 8px 12px; background: #171a18; color: #fff; font: inherit; cursor: pointer; }
+.photoActions a { background: transparent; color: #171a18; }
+.editor button { min-height: 44px; min-width: 44px; }
+.editor input, .editor select { min-width: 0; }
+.editor button:disabled { opacity: 0.45; cursor: not-allowed; }
+.frameRail header { scroll-margin-top: 190px; }
 .identity,
 .socials,
 .collections { border-bottom: 1px solid #c9cbc5; padding-bottom: 28px; }
@@ -75,13 +82,16 @@
 .frameHeader { min-height: 42px; display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; }
 .frameHeader > div:first-child { display: grid; gap: 3px; }
 .frameHeader span { color: #e45143; font: 0.67rem ui-monospace, monospace; }
-.frameHeader strong { font: 0.73rem ui-monospace, monospace; color: #69706b; }
+.frameHeader strong { font: 0.73rem ui-monospace, monospace; color: #69706b; overflow-wrap: anywhere; }
+.frameHeader { flex-wrap: wrap; }
+.frameHeader > div { min-width: 0; }
 .frameHeader > div:last-child { display: flex; gap: 6px; }
 .preview { position: relative; min-height: 340px; display: grid; place-items: center; margin-top: 12px; overflow: hidden; background: #111513; }
 .preview > img { width: 100%; height: 430px; border: 0; object-fit: contain; background: #111513; }
 .preview > label:not(.replace) { display: grid; place-items: center; gap: 10px; color: #9aa39e; cursor: pointer; }
-.preview input { display: none; }
-.replace { position: absolute; right: 12px; bottom: 12px; display: flex; align-items: center; gap: 7px; min-height: 36px; border: 1px solid #56605b; border-radius: 4px; background: #111513; color: white; padding: 0 10px; cursor: pointer; }
+.preview input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.preview label:focus-within { outline: 2px solid #e45143; outline-offset: 4px; }
+.replace { position: absolute; right: 12px; top: 12px; bottom: auto; display: flex; align-items: center; gap: 7px; min-height: 44px; border: 1px solid #56605b; border-radius: 4px; background: #111513; color: white; padding: 0 10px; cursor: pointer; }
 .corner { position: absolute; left: 12px; top: 12px; color: #e45143; font: 0.65rem ui-monospace, monospace; }
 .uploadStatus { min-height: 22px; margin-top: 6px; color: #b83f35; font-size: 0.78rem; }
 .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 12px; }

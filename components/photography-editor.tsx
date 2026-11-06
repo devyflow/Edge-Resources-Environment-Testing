@@ -1,13 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { shouldUseSupabaseContent, uploadSupabaseAsset } from "@/lib/content-store";
 import { ArrowDown, ArrowUp, BookOpen, Camera, Crosshair, Eye, EyeOff, Link2, Plus, ShieldCheck, Trash2, Upload } from "lucide-react";
 import { normalizePhotography, type PhotoArchiveView, type PhotoCollection, type PhotoFieldNote, type PhotographyContent, type PhotoPost, type PhotoSectionId, type PhotoSocialLink, type PhotoSocialPlatform } from "@/lib/photography-content";
 import s from "./photography-editor.module.css";
 import v2 from "./photography-editor-v2.module.css";
 
-export default function PhotographyEditor({ value, onChange }: { value?: PhotographyContent; onChange: (value: PhotographyContent) => void }) {
+export default function PhotographyEditor({ value, onChange, onBusyChange }: { value?: PhotographyContent; onChange: (value: PhotographyContent) => void; onBusyChange?: (busy: boolean) => void }) {
   const data = normalizePhotography(value);
+  const latest = useRef(data);
+  latest.current = data;
   const [selected, setSelected] = useState(data.posts[0]?.slug ?? "");
   const [newCollection, setNewCollection] = useState("");
   const [error, setError] = useState("");
@@ -66,6 +69,7 @@ export default function PhotographyEditor({ value, onChange }: { value?: Photogr
       posts: [...data.posts, { slug, title: "Untitled Frame", caption: "", alt: "", category: data.categories[0] ?? "", image: "", visible: false, focalX: 50, focalY: 50, showMetadata: false, displayCode: `DF-${String(frameNumber).padStart(3, "0")}` }]
     });
     setSelected(slug);
+    requestAnimationFrame(() => document.getElementById("studio-frames")?.scrollIntoView({ block: "start" }));
   }
 
   function removePhoto() {
@@ -99,34 +103,53 @@ export default function PhotographyEditor({ value, onChange }: { value?: Photogr
   }
 
   async function upload(file: File) {
+    if (busy || !post) return;
+    const targetSlug = post.slug;
     setError("");
     if (!["image/jpeg", "image/png", "image/webp"].includes(file.type) || file.size > 10 * 1024 * 1024) {
       setError("Choose a JPG, PNG, or WebP under 10 MB.");
       return;
     }
     setBusy(true);
+    onBusyChange?.(true);
     try {
       const bitmap = await createImageBitmap(file);
       const scale = Math.min(1, 1600 / Math.max(bitmap.width, bitmap.height));
       const canvas = document.createElement("canvas");
       canvas.width = Math.round(bitmap.width * scale);
       canvas.height = Math.round(bitmap.height * scale);
-      canvas.getContext("2d")?.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
-      const width = bitmap.width;
-      const height = bitmap.height;
+      const context = canvas.getContext("2d");
+      if (!context) { bitmap.close(); throw new Error("Image preparation is unavailable in this browser."); }
+      context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+      const width = canvas.width;
+      const height = canvas.height;
       bitmap.close();
-      const image = canvas.toDataURL("image/jpeg", 0.8);
-      if (image.length > 1_200_000) throw new Error("This frame is still too large for local storage. Try a smaller file.");
-      patch({ image, width, height });
+      let image: string;
+      if (shouldUseSupabaseContent()) {
+        const blob = await new Promise<Blob>((resolve, reject) => canvas.toBlob(
+          result => result ? resolve(result) : reject(new Error("Could not prepare this photo.")), "image/jpeg", 0.85
+        ));
+        image = await uploadSupabaseAsset(new File([blob], `${targetSlug}.jpg`, { type: "image/jpeg" }), "photography");
+      } else {
+        image = canvas.toDataURL("image/jpeg", 0.8);
+        if (image.length > 1_200_000) throw new Error("This frame is still too large for local storage. Try a smaller file.");
+      }
+      const current = latest.current;
+      onChange({ ...current, posts: current.posts.map(item => item.slug === targetSlug ? { ...item, image, width, height } : item) });
     } catch (uploadError) {
       setError(uploadError instanceof Error ? uploadError.message : "Could not read this image.");
     } finally {
       setBusy(false);
+      onBusyChange?.(false);
     }
   }
 
   return (
-    <div className={s.editor}>
+    <fieldset className={s.editor} disabled={busy} aria-label="Photography editor" aria-busy={busy}>
+      <div className={s.photoActions}>
+        <button type="button" onClick={addPhoto} disabled={busy}><Plus size={18} />Add photo</button>
+        <a href="#studio-frames"><Camera size={18} />Manage frames</a>
+      </div>
       <section className={s.identity}>
         <div className={s.sectionLabel}><span>01</span><div><strong>Archive identity</strong><small>Public name shown above the contact sheet</small></div></div>
         <div className={s.identityFields}>
@@ -212,7 +235,7 @@ export default function PhotographyEditor({ value, onChange }: { value?: Photogr
 
       <section className={s.frames}>
         <aside className={s.frameRail}>
-          <header><div className={s.sectionLabel}><span>05</span><div><strong>Frames</strong><small>{data.posts.filter((item) => item.visible).length} published / {data.posts.length} total</small></div></div><button type="button" onClick={addPhoto} aria-label="Add photo" title="Add photo"><Plus size={18} /></button></header>
+          <header id="studio-frames"><div className={s.sectionLabel}><span>05</span><div><strong>Frames</strong><small>{data.posts.filter((item) => item.visible).length} published / {data.posts.length} total</small></div></div><button type="button" onClick={addPhoto} disabled={busy} aria-label="Add photo" title="Add photo"><Plus size={18} /></button></header>
           <div className={s.thumbnails}>{data.posts.map((item, itemIndex) => <button type="button" key={item.slug} data-active={item.slug === selected} onClick={() => setSelected(item.slug)}>
             <span>{String(itemIndex + 1).padStart(2, "0")}</span>{item.image ? <img src={item.image} alt="" /> : <i><Camera size={18} /></i>}<div><strong>{item.title || "Untitled"}</strong><small>{item.category || "No collection"}</small></div>{item.visible ? <Eye size={14} /> : <EyeOff size={14} />}
           </button>)}</div>
@@ -224,15 +247,15 @@ export default function PhotographyEditor({ value, onChange }: { value?: Photogr
             <header className={s.frameHeader}><div><span>FRAME {String(index + 1).padStart(2, "0")}</span><strong>{post.slug}</strong></div><div>
               <button type="button" disabled={index === 0} onClick={() => move(-1)} aria-label="Move earlier" title="Move earlier"><ArrowUp size={17} /></button>
               <button type="button" disabled={index === data.posts.length - 1} onClick={() => move(1)} aria-label="Move later" title="Move later"><ArrowDown size={17} /></button>
-              <button type="button" onClick={removePhoto} aria-label="Remove frame" title="Remove frame"><Trash2 size={17} /></button>
+              <button type="button" onClick={removePhoto} disabled={busy} aria-label="Remove frame" title="Remove frame"><Trash2 size={17} /></button>
             </div></header>
 
             <div className={`${s.preview} ${v2.focalPreview}`} onClick={(event) => { if (!post.image || (event.target as HTMLElement).closest("label")) return; const rect = event.currentTarget.getBoundingClientRect(); patch({ focalX: Math.round((event.clientX - rect.left) / rect.width * 100), focalY: Math.round((event.clientY - rect.top) / rect.height * 100) }); }}>
-              {post.image ? <><img src={post.image} alt={post.alt} /><i style={{ left: `${post.focalX ?? 50}%`, top: `${post.focalY ?? 50}%` }} /><span className={v2.focalLabel}><Crosshair size={13} />Crop focus {post.focalX ?? 50}% / {post.focalY ?? 50}%</span></> : <label><Camera size={36} /><span>No image selected</span><input type="file" accept="image/jpeg,image/png,image/webp" disabled={busy} onChange={(event) => { const file = event.target.files?.[0]; if (file) void upload(file); event.target.value = ""; }} /></label>}
-              {post.image && <label className={s.replace}><Upload size={16} />Replace<input type="file" accept="image/jpeg,image/png,image/webp" disabled={busy} onChange={(event) => { const file = event.target.files?.[0]; if (file) void upload(file); event.target.value = ""; }} /></label>}
+              {post.image ? <><img src={post.image} alt={post.alt} /><i style={{ left: `${post.focalX ?? 50}%`, top: `${post.focalY ?? 50}%` }} /><span className={v2.focalLabel}><Crosshair size={13} />Crop focus {post.focalX ?? 50}% / {post.focalY ?? 50}%</span></> : <label><Camera size={36} /><span>{busy ? "Uploading..." : "Choose photo"}</span><input type="file" aria-label="Choose photo" accept="image/jpeg,image/png,image/webp" disabled={busy} onChange={(event) => { const file = event.target.files?.[0]; if (file) void upload(file); event.target.value = ""; }} /></label>}
+              {post.image && <label className={s.replace}><Upload size={16} />{busy ? "Uploading..." : "Replace"}<input type="file" aria-label="Replace photo" accept="image/jpeg,image/png,image/webp" disabled={busy} onChange={(event) => { const file = event.target.files?.[0]; if (file) void upload(file); event.target.value = ""; }} /></label>}
               <span className={s.corner}>DF / {String(index + 1).padStart(2, "0")}</span>
             </div>
-            <p className={s.uploadStatus} role="status">{busy ? "Preparing frame..." : error}</p>
+            <p className={s.uploadStatus} role="status">{busy ? "Preparing and uploading photo..." : error}</p>
 
             <div className={s.fields}>
               <label><span>Two-word title</span><input maxLength={42} value={post.title} onChange={(event) => patch({ title: event.target.value })} /><small>Keep public frame titles to two words.</small></label>
@@ -250,6 +273,6 @@ export default function PhotographyEditor({ value, onChange }: { value?: Photogr
           </>}
         </div>
       </section>
-    </div>
+    </fieldset>
   );
 }

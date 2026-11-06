@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { readStudioDraft, studioDraftKey, writeStudioDraft } from "@/lib/studio-draft";
 import {
   Aperture,
   Camera,
@@ -108,10 +109,17 @@ export default function AdminPage() {
   const [tab, setTab] = useState<StudioTab>("home");
   const [data, setData] = useState<PortfolioData | null>(null);
   const [status, setStatus] = useState("Saved");
+  const [dirty, setDirty] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [draftWarning, setDraftWarning] = useState("");
+  const draftKey = useRef("");
+  const revision = useRef(0);
 
   useEffect(() => {
     async function boot() {
       const usesSupabase = shouldUseSupabaseContent();
+      let account = "local";
       setRemoteMode(usesSupabase);
       if (usesSupabase) {
         const user = await getSupabaseUser();
@@ -120,43 +128,84 @@ export default function AdminPage() {
           window.location.replace("/admin/login");
           return;
         }
+        account = user.id;
       } else {
         setSignedInState(isSignedIn());
       }
-      setData(completeData(await loadPortfolioData()));
+      draftKey.current = studioDraftKey(account);
+      let recovered: PortfolioData | null = null;
+      try {
+        recovered = readStudioDraft(sessionStorage, draftKey.current);
+        const savedTab = sessionStorage.getItem("devyflow-studio-section");
+        if (savedTab === "home" || savedTab === "engineering" || savedTab === "photography") setTab(savedTab);
+      } catch { /* Storage is optional. */ }
+      setData(completeData(recovered ?? await loadPortfolioData()));
+      if (recovered) { setDirty(true); setStatus("Recovered unsaved draft"); }
       setReady(true);
     }
     void boot();
   }, []);
+
+  useEffect(() => {
+    if (!ready) return;
+    try { sessionStorage.setItem("devyflow-studio-section", tab); } catch {}
+  }, [ready, tab]);
+
+  useEffect(() => {
+    if (!dirty || !data || !draftKey.current) return;
+    try {
+      const saved = writeStudioDraft(sessionStorage, draftKey.current, data);
+      setDraftWarning(saved ? "" : "Device draft backup is unavailable. Save before leaving the studio.");
+    } catch { setDraftWarning("Device draft backup is unavailable. Save before leaving the studio."); }
+  }, [data, dirty]);
+
+  useEffect(() => {
+    if (!dirty && !uploading) return;
+    const warn = (event: BeforeUnloadEvent) => { event.preventDefault(); event.returnValue = ""; };
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [dirty, uploading]);
 
   function updateData(updater: (draft: PortfolioData) => void) {
     setData((current) => {
       if (!current) return current;
       const draft = JSON.parse(JSON.stringify(current)) as PortfolioData;
       updater(draft);
+      revision.current += 1;
+      setDirty(true);
       setStatus("Unsaved changes");
       return draft;
     });
   }
 
   async function saveAll(message = "Saved") {
-    if (!data) return;
+    if (!data || saving || uploading) return;
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.profile.email.trim())) {
       setStatus("Enter a valid engineering contact email.");
       return;
     }
     try {
+      const savedRevision = revision.current;
+      setSaving(true);
       setStatus("Saving...");
       const next = completeData({ ...data, profile: { ...data.profile, email: data.profile.email.trim() } });
       await savePortfolioData(next);
-      setData(next);
-      setStatus(message);
+      if (revision.current === savedRevision) {
+        setData(next);
+        setDirty(false);
+        try { sessionStorage.removeItem(draftKey.current); } catch {}
+        setStatus(message);
+      } else setStatus("Unsaved changes");
     } catch (error) {
       setStatus(error instanceof Error ? error.message : "Save failed");
+    } finally {
+      setSaving(false);
     }
   }
 
   async function signOut() {
+    if (dirty && !window.confirm("Sign out and discard your unsaved draft?")) return;
+    try { sessionStorage.removeItem(draftKey.current); } catch {}
     if (remoteMode) {
       await signOutSupabaseAdmin();
       window.location.assign("/admin/login");
@@ -181,6 +230,8 @@ export default function AdminPage() {
     try {
       const incoming = JSON.parse(await file.text()) as Partial<PortfolioData>;
       setData(completeData(mergeData(defaultData, incoming)));
+      revision.current += 1;
+      setDirty(true);
       setStatus("Backup loaded. Review it, then save.");
     } catch {
       setStatus("That backup file could not be read.");
@@ -201,13 +252,13 @@ export default function AdminPage() {
   return (
     <div className={s.studio} data-area={tab}>
       <header className={s.topbar}>
-        <Link className={s.brand} href="/"><Aperture size={25} /><span>DevyFlow Studio</span></Link>
+        <button type="button" className={s.brand} disabled={uploading} onClick={() => setTab("home")} aria-label="Studio home"><Aperture size={25} /><span>DevyFlow Studio</span></button>
         <div className={s.topActions}>
-          <span className={s.saveState} data-dirty={status === "Unsaved changes"}>{status}</span>
+          <span className={s.saveState} data-dirty={dirty} role="status">{uploading ? "Uploading photo..." : status}</span>
           <PwaInstallButton />
-          <button type="button" onClick={() => void saveAll()}><Save size={17} />Save all</button>
-          <Link href={previewPath} target="_blank"><Eye size={17} />Preview {activeDestination.label}</Link>
-          <button type="button" className={s.iconButton} onClick={() => void signOut()} aria-label="Sign out" title="Sign out"><LogOut size={18} /></button>
+          <button type="button" onClick={() => void saveAll()} disabled={saving || uploading}><Save size={17} />{saving ? "Saving..." : "Save all"}</button>
+          <Link href={previewPath} target="_blank" rel="noopener noreferrer" aria-label={`Preview ${activeDestination.label} in a separate window`} title="Open saved website in a separate window; studio stays open"><Eye size={17} />Preview</Link>
+          <button type="button" className={s.iconButton} disabled={saving || uploading} onClick={() => void signOut()} aria-label="Sign out" title="Sign out"><LogOut size={18} /></button>
         </div>
       </header>
 
@@ -215,7 +266,7 @@ export default function AdminPage() {
         <aside className={s.sidebar}>
           <div className={s.modeLabel}><span>CONTROL ROOM</span><b>{String(activeIndex + 1).padStart(2, "0")} / 03</b></div>
           <nav aria-label="Studio sections">
-            {destinations.map((item, index) => <button key={item.id} type="button" data-active={tab === item.id} onClick={() => setTab(item.id)}>
+            {destinations.map((item, index) => <button key={item.id} type="button" disabled={uploading} data-active={tab === item.id} onClick={() => setTab(item.id)}>
               <span>{String(index + 1).padStart(2, "0")}</span><item.icon size={19} /><div><strong>{item.label}</strong><small>{item.note}</small></div>
             </button>)}
           </nav>
@@ -223,10 +274,11 @@ export default function AdminPage() {
         </aside>
 
         <main className={s.editor}>
+          {draftWarning && <p role="alert" className={s.draftWarning}>{draftWarning}</p>}
           {tab === "home" && <section className={s.homePanel}>
             <header className={s.panelHeader}><div><span className={s.eyebrow}>EXPERIENCE MAP</span><h1>Current portfolio controls.</h1><p>Only the three live experiences are shown here. Legacy website sections have been removed from this admin.</p></div><Aperture size={64} strokeWidth={0.8} /></header>
             <div className={s.routeList}>
-              {destinations.map((item, index) => <article key={item.id}><span>{String(index + 1).padStart(2, "0")}</span><item.icon size={22} /><div><h2>{item.label}</h2><p>{item.note}</p></div><Link href={item.path} target="_blank"><Eye size={17} />Open</Link></article>)}
+              {destinations.map((item, index) => <article key={item.id}><span>{String(index + 1).padStart(2, "0")}</span><item.icon size={22} /><div><h2>{item.label}</h2><p>{item.note}</p></div><Link href={item.path} target="_blank" rel="noopener noreferrer"><Eye size={17} />Open</Link></article>)}
             </div>
             <HomeExperienceEditor value={homeExperience} onChange={(value) => updateData((draft) => { draft.homeExperience = value; })} />
             <section className={s.utilitySection}>
@@ -234,7 +286,7 @@ export default function AdminPage() {
               <div className={s.utilityActions}>
                 <button type="button" onClick={downloadBackup}><Download size={17} />Download backup</button>
                 <label><Upload size={17} />Import backup<input type="file" accept="application/json" onChange={(event) => { const file = event.target.files?.[0]; if (file) void importBackup(file); event.target.value = ""; }} /></label>
-                <button type="button" onClick={() => { if (!window.confirm("Load the default content as an unsaved draft?")) return; setData(completeData(defaultData)); setStatus("Unsaved changes"); }}><RotateCcw size={17} />Load defaults</button>
+                <button type="button" onClick={() => { if (!window.confirm("Load the default content as an unsaved draft?")) return; revision.current += 1; setDirty(true); setData(completeData(defaultData)); setStatus("Unsaved changes"); }}><RotateCcw size={17} />Load defaults</button>
               </div>
             </section>
           </section>}
@@ -249,7 +301,7 @@ export default function AdminPage() {
 
           {tab === "photography" && <section className={`${s.contentPanel} ${s.photoPanel}`}>
             <header className={s.panelHeader}><div><span className={s.eyebrow}>BEYOND THE CODE</span><h1>Photography archive.</h1><p>Arrange the contact sheet, manage collections, and prepare each frame for the full-screen viewer.</p></div><Camera size={54} strokeWidth={1} /></header>
-            <PhotographyEditor value={photography} onChange={(value) => updateData((draft) => { draft.photography = value; })} />
+            <PhotographyEditor value={photography} onBusyChange={setUploading} onChange={(value) => updateData((draft) => { draft.photography = value; })} />
           </section>}
         </main>
       </div>

@@ -33,7 +33,7 @@
   align-items: center;
 }
 
-.brand { gap: 10px; font-weight: 800; }
+.brand { gap: 10px; font: inherit; font-weight: 800; border: 0; padding: 0; color: inherit; background: transparent; cursor: pointer; }
 .brand svg { color: var(--studio-accent); }
 .topActions { gap: 8px; }
 .installControl { position: relative; display: flex; align-items: center; }
@@ -71,6 +71,11 @@
 .topActions .iconButton { width: 38px; padding: 0; justify-content: center; }
 .saveState { color: #9ea8a2; font: 0.72rem ui-monospace, monospace; text-transform: uppercase; }
 .saveState[data-dirty="true"] { color: #f2b24b; }
+.draftWarning { max-width: 980px; margin: 0 auto 20px; color: #9b3028; }
+.topActions a, .topActions button { min-height: 44px; }
+.topActions .iconButton { width: 44px; }
+.topActions button:disabled { opacity: 0.55; cursor: wait; }
+.studio button:focus-visible, .studio a:focus-visible, .studio input:focus-visible { outline: 2px solid var(--studio-accent); outline-offset: 3px; }
 
 .workspace { display: grid; grid-template-columns: 250px minmax(0, 1fr); min-height: calc(100vh - 68px); }
 .sidebar { position: sticky; top: 68px; height: calc(100vh - 68px); border-right: 1px solid #303633; padding: 28px 18px; }
@@ -183,10 +188,13 @@
 }
 
 @media (max-width: 520px) {
-  .brand span { display: none; }
-  .topActions > a { display: none; }
+  .topbar { flex-wrap: wrap; gap: 10px; padding-inline: 14px; padding-top: max(12px, env(safe-area-inset-top)); }
+  .brand { font-size: 0.9rem; }
+  .topActions { width: 100%; justify-content: space-between; gap: 6px; }
+  .topActions > a { display: flex; }
+  .topActions > a, .topActions > button:not(.iconButton) { flex: 1; font-size: 0.8rem; padding-inline: 8px; }
   .topActions button:not(.iconButton) { padding-inline: 10px; }
-  .installControl button { width: 38px; padding: 0; justify-content: center; }
+  .installControl button { width: 44px; padding: 0; justify-content: center; }
   .installControl button { font-size: 0; }
   .installControl button svg { width: 18px; height: 18px; }
   .sidebar nav button { padding: 8px 6px; }
