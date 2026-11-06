@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { Aperture, Moon, Music2, Settings2, Sun, Volume2, VolumeX } from "lucide-react";
+import { Aperture, Moon, Music2, Sun, Volume2, VolumeX } from "lucide-react";
 import { ExperienceAudio } from "@/lib/experience-audio";
 import s from "./entry-experience.module.css";
 
@@ -88,16 +88,15 @@ export default function EntryExperienceShell({ children, area = "home", defaultT
     <ExperienceContext.Provider value={{ enter, shutter, sound, toggleSound, dark, toggleTheme }}>
       <div className={s.experience} data-dark={dark} data-welcome={welcomed} data-photography={photography}>
         {children}
-        {!welcomed && <details className={s.audioDock} aria-label="Experience settings" data-audio-control>
-          <summary className={s.settingsToggle} aria-label="Experience settings" title="Experience settings"><Settings2 size={17} /></summary>
+        <div className={s.audioDock} role="group" aria-label="Experience settings" data-audio-control>
           <div className={s.audioOptions}>
-            {photography && <><span className={s.audioLabel}>{sound ? "SHUTTER ON" : "SHUTTER OFF"}</span>
+            <span className={s.audioLabel}>{sound ? "SHUTTER ON" : "SHUTTER OFF"}</span>
               <button type="button" onClick={toggleSound} aria-pressed={sound} aria-label={sound ? "Mute shutter sounds" : "Enable shutter sounds"} title={sound ? "Mute shutter sounds" : "Enable shutter sounds"}>{sound ? <Volume2 size={17} /> : <VolumeX size={17} />}</button>
-              <button type="button" onClick={() => void toggleMusic()} aria-pressed={music} aria-label={music ? "Pause ambient music" : "Play ambient music"} title={music ? "Pause River Study" : "Play River Study: original ambient sound"}><Music2 size={17} /><i className={s.musicLed} /></button></>}
+              <button type="button" onClick={() => void toggleMusic()} aria-pressed={music} aria-label={music ? "Pause ambient music" : "Play ambient music"} title={music ? "Pause River Study" : "Play River Study: original ambient sound"}><Music2 size={17} /><i className={s.musicLed} /></button>
             <button type="button" onClick={toggleTheme} aria-label={dark ? "Use light theme" : "Use dark theme"} title="Switch theme">{dark ? <Sun size={17} /> : <Moon size={17} />}</button>
             {audioError && <span role="status" className={s.audioError}>{audioError}</span>}
           </div>
-        </details>}
+        </div>
         {phase && <div className={s.transition} data-phase={phase} aria-hidden="true"><div /><div /><Aperture size={36} strokeWidth={1} /></div>}
       </div>
     </ExperienceContext.Provider>

@@ -63,8 +63,6 @@
 .clickFocus { position: absolute; width: 46px; height: 36px; border: 1px solid #d0ecc1; transform: translate(-50%, -50%); pointer-events: none; animation: focusIn .4s ease both; }
 .audioDock { position: fixed; z-index: 25; right: 22px; bottom: 16px; display: flex; align-items: center; gap: 2px; border: 1px solid #767e7380; padding: 4px; border-radius: 5px; background: #202724f2; color: #dce3da; box-shadow: 0 3px 15px #0002; }
 .audioOptions { display: flex; align-items: center; gap: 2px; }
-.settingsToggle { display: none !important; }
-.settingsToggle::-webkit-details-marker { display: none; }
 .audioLabel { font: 8px Consolas, monospace; padding: 0 11px 0 8px; color: #a5b1a4; }
 .audioDock button { width: 36px; height: 35px; border: 0; border-radius: 3px; color: #9ca89e; background: transparent; display: grid; place-items: center; position: relative; }
 .audioDock button[aria-pressed="true"] { color: #f3f5ed; background: #ffffff0c; }
@@ -265,4 +263,7 @@
   .engineer .systemOverview { min-height: 240px; }
 }
 .experience[data-photography=true] .audioLabel { display: inline; }
+.experience .audioDock { right: max(12px, env(safe-area-inset-right)); bottom: max(12px, env(safe-area-inset-bottom)); }
+.experience .audioOptions { display: flex; position: static; padding: 0; border: 0; background: transparent; box-shadow: none; }
+.experience .audioDock button { width: 44px; height: 44px; color: #c8d2ca; }
 .experience[data-photography=true][data-dark=true]{--paper:#0a0c0b;--surface:#151916;--line:#303631;--muted:#aeb5af;--photo-header:#070908;--photo-ink:#eef1ec;--photo-muted:#aeb5af;--photo-line:#303631;--photo-paper:#0a0c0b;--photo-panel:#151916}.experience[data-photography=true][data-dark=false]{--paper:#f4f4f0;--surface:#e8e9e4;--line:#c9ccc6;--muted:#68706a;--photo-header:#e5e6e2;--photo-ink:#171a18;--photo-muted:#68706a;--photo-line:#c9ccc6;--photo-paper:#f4f4f0;--photo-panel:#e8e9e4}
