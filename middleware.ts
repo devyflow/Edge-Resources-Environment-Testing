@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { withAuthDeadline } from "./lib/auth-deadline";
 
 const isDevelopmentLocalStudio =
   process.env.NODE_ENV !== "production" && process.env.NEXT_PUBLIC_CONTENT_MODE === "local";
@@ -38,6 +39,7 @@ function secureHeaders(response: NextResponse, csp: string) {
 
 function redirectWithCookies(url: URL, source: NextResponse, csp: string) {
   const redirect = NextResponse.redirect(url);
+  redirect.headers.set("Cache-Control", "private, no-store");
   for (const cookie of source.cookies.getAll()) redirect.cookies.set(cookie);
   return secureHeaders(redirect, csp);
 }
@@ -58,6 +60,9 @@ export async function middleware(request: NextRequest) {
   const isAdminRoute = pathname.startsWith("/admin");
   const isPublicAdminAsset = pathname === "/admin/manifest.webmanifest";
   if (!isAdminRoute || isPublicAdminAsset || isDevelopmentLocalStudio) return secureHeaders(response, csp);
+  response.headers.set("Cache-Control", "private, no-store");
+  // The public login form must remain reachable when session refresh is unavailable.
+  if (pathname === "/admin/login") return secureHeaders(response, csp);
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -73,32 +78,31 @@ export async function middleware(request: NextRequest) {
   }
 
   const supabase = createServerClient(url, key, {
+    global: {
+      fetch: (input, init) => fetch(input, { ...init, signal: AbortSignal.timeout(3500) })
+    },
     cookies: {
       getAll: () => request.cookies.getAll(),
       setAll: (cookies) => {
         for (const cookie of cookies) request.cookies.set(cookie.name, cookie.value);
         response = NextResponse.next({ request: { headers: requestHeaders } });
+        response.headers.set("Cache-Control", "private, no-store");
         for (const cookie of cookies) response.cookies.set(cookie.name, cookie.value, cookie.options);
       }
     }
   });
 
-  const { data, error } = await supabase.auth.getClaims();
+  const result = await withAuthDeadline(() => supabase.auth.getClaims());
+  if (!result.ok) {
+    return secureHeaders(new NextResponse(
+      'Authentication is temporarily unavailable. Please try again shortly, or open /admin/login to sign in again.',
+      { status: 503, headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "private, no-store", "Retry-After": "10" } }
+    ), csp);
+  }
+  const { data, error } = result.value;
   const claims = error ? null : data?.claims;
   const isAdmin = claims?.sub === adminUserId;
   const hasMfa = claims?.aal === "aal2";
-  const isLogin = request.nextUrl.pathname === "/admin/login";
-
-  if (isLogin) {
-    if (isAdmin && hasMfa) {
-      const destination = request.nextUrl.clone();
-      destination.pathname = "/admin";
-      destination.search = "";
-      return redirectWithCookies(destination, response, csp);
-    }
-    return secureHeaders(response, csp);
-  }
-
   if (!claims || !isAdmin || !hasMfa) {
     const destination = request.nextUrl.clone();
     destination.pathname = "/admin/login";
