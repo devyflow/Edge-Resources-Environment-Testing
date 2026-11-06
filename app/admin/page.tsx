@@ -19,6 +19,7 @@ import EngineerProjectEditor from "@/components/engineer-project-editor";
 import EngineeringToolsEditor from "@/components/engineering-tools-editor";
 import HomeExperienceEditor from "@/components/home-experience-editor";
 import PhotographyEditor from "@/components/photography-editor";
+import PwaInstallButton from "./pwa-install-button";
 import {
   getSupabaseUser,
   hasPasscode,
@@ -203,6 +204,7 @@ export default function AdminPage() {
         <Link className={s.brand} href="/"><Aperture size={25} /><span>DevyFlow Studio</span></Link>
         <div className={s.topActions}>
           <span className={s.saveState} data-dirty={status === "Unsaved changes"}>{status}</span>
+          <PwaInstallButton />
           <button type="button" onClick={() => void saveAll()}><Save size={17} />Save all</button>
           <Link href={previewPath} target="_blank"><Eye size={17} />Preview {activeDestination.label}</Link>
           <button type="button" className={s.iconButton} onClick={() => void signOut()} aria-label="Sign out" title="Sign out"><LogOut size={18} /></button>

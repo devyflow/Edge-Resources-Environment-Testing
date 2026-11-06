@@ -36,6 +36,21 @@
 .brand { gap: 10px; font-weight: 800; }
 .brand svg { color: var(--studio-accent); }
 .topActions { gap: 8px; }
+.installControl { position: relative; display: flex; align-items: center; }
+.installControl > span {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: min(280px, 75vw);
+  padding: 9px 11px;
+  border: 1px solid #3b423f;
+  border-radius: 4px;
+  background: #171b19;
+  color: #dfe4df;
+  font-size: 0.74rem;
+  line-height: 1.4;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
 
 .topActions a,
 .topActions button,
@@ -170,6 +185,9 @@
   .brand span { display: none; }
   .topActions > a { display: none; }
   .topActions button:not(.iconButton) { padding-inline: 10px; }
+  .installControl button { width: 38px; padding: 0; justify-content: center; }
+  .installControl button { font-size: 0; }
+  .installControl button svg { width: 18px; height: 18px; }
   .sidebar nav button { padding: 8px 6px; }
   .sidebar nav button > span { display: none; }
   .sidebar nav button { grid-template-columns: 1fr; text-align: center; }
