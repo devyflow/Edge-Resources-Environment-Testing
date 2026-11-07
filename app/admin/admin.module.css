@@ -33,7 +33,7 @@
   align-items: center;
 }
 
-.brand { gap: 10px; font: inherit; font-weight: 800; border: 0; padding: 0; color: inherit; background: transparent; cursor: pointer; }
+.brand { min-height: 44px; gap: 10px; font: inherit; font-weight: 800; border: 0; padding: 0; color: inherit; background: transparent; cursor: pointer; }
 .brand svg { color: var(--studio-accent); }
 .topActions { gap: 8px; }
 .installControl { position: relative; display: flex; align-items: center; }
