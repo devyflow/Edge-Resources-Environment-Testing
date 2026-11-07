@@ -79,7 +79,10 @@
 .thumbnails small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .thumbnails small { color: #69706b; }
 
-.frameEditor { min-width: 0; padding: 20px; }
+.frameEditor { min-width: 0; padding: 20px; scroll-margin-top: 170px; }
+.uploadActions { display: flex; margin: 14px 0; }
+.uploadActions button { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 14px; border: 1px solid #171a18; border-radius: 4px; background: #171a18; color: #fff; font: inherit; cursor: pointer; }
+.emptyPhoto { display: grid; place-items: center; gap: 12px; color: #b9c4bd; }
 .frameHeader { min-height: 42px; display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; }
 .frameHeader > div:first-child { display: grid; gap: 3px; }
 .frameHeader span { color: #e45143; font: 0.67rem ui-monospace, monospace; }

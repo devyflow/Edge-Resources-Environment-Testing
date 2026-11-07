@@ -10,6 +10,7 @@ import v2 from "./photography-editor-v2.module.css";
 export default function PhotographyEditor({ value, onChange, onBusyChange }: { value?: PhotographyContent; onChange: (value: PhotographyContent) => void; onBusyChange?: (busy: boolean) => void }) {
   const data = normalizePhotography(value);
   const latest = useRef(data);
+  const photoFile = useRef<HTMLInputElement>(null);
   latest.current = data;
   const [selected, setSelected] = useState(data.posts[0]?.slug ?? "");
   const [newCollection, setNewCollection] = useState("");
@@ -69,7 +70,7 @@ export default function PhotographyEditor({ value, onChange, onBusyChange }: { v
       posts: [...data.posts, { slug, title: "Untitled Frame", caption: "", alt: "", category: data.categories[0] ?? "", image: "", visible: false, focalX: 50, focalY: 50, showMetadata: false, displayCode: `DF-${String(frameNumber).padStart(3, "0")}` }]
     });
     setSelected(slug);
-    requestAnimationFrame(() => document.getElementById("studio-frames")?.scrollIntoView({ block: "start" }));
+    requestAnimationFrame(() => document.getElementById("studio-photo-editor")?.scrollIntoView({ block: "start" }));
   }
 
   function removePhoto() {
@@ -241,7 +242,7 @@ export default function PhotographyEditor({ value, onChange, onBusyChange }: { v
           </button>)}</div>
         </aside>
 
-        <div className={s.frameEditor}>
+        <div className={s.frameEditor} id="studio-photo-editor">
           {!post && <div className={s.empty}><Camera size={34} /><p>Add a frame to begin.</p></div>}
           {post && <>
             <header className={s.frameHeader}><div><span>FRAME {String(index + 1).padStart(2, "0")}</span><strong>{post.slug}</strong></div><div>
@@ -250,9 +251,13 @@ export default function PhotographyEditor({ value, onChange, onBusyChange }: { v
               <button type="button" onClick={removePhoto} disabled={busy} aria-label="Remove frame" title="Remove frame"><Trash2 size={17} /></button>
             </div></header>
 
-            <div className={`${s.preview} ${v2.focalPreview}`} onClick={(event) => { if (!post.image || (event.target as HTMLElement).closest("label")) return; const rect = event.currentTarget.getBoundingClientRect(); patch({ focalX: Math.round((event.clientX - rect.left) / rect.width * 100), focalY: Math.round((event.clientY - rect.top) / rect.height * 100) }); }}>
-              {post.image ? <><img src={post.image} alt={post.alt} /><i style={{ left: `${post.focalX ?? 50}%`, top: `${post.focalY ?? 50}%` }} /><span className={v2.focalLabel}><Crosshair size={13} />Crop focus {post.focalX ?? 50}% / {post.focalY ?? 50}%</span></> : <label><Camera size={36} /><span>{busy ? "Uploading..." : "Choose photo"}</span><input type="file" aria-label="Choose photo" accept="image/jpeg,image/png,image/webp" disabled={busy} onChange={(event) => { const file = event.target.files?.[0]; if (file) void upload(file); event.target.value = ""; }} /></label>}
-              {post.image && <label className={s.replace}><Upload size={16} />{busy ? "Uploading..." : "Replace"}<input type="file" aria-label="Replace photo" accept="image/jpeg,image/png,image/webp" disabled={busy} onChange={(event) => { const file = event.target.files?.[0]; if (file) void upload(file); event.target.value = ""; }} /></label>}
+            <div className={s.uploadActions}>
+              <button type="button" disabled={busy} onClick={() => photoFile.current?.click()}><Upload size={18} />{busy ? "Uploading..." : post.image ? "Replace photo" : "Upload photo"}</button>
+              <input ref={photoFile} type="file" aria-label="Photo file" accept="image/jpeg,image/png,image/webp" disabled={busy} hidden onChange={(event) => { const file = event.target.files?.[0]; if (file) void upload(file); event.target.value = ""; }} />
+            </div>
+
+            <div className={`${s.preview} ${v2.focalPreview}`} onClick={(event) => { if (!post.image) return; const rect = event.currentTarget.getBoundingClientRect(); patch({ focalX: Math.round((event.clientX - rect.left) / rect.width * 100), focalY: Math.round((event.clientY - rect.top) / rect.height * 100) }); }}>
+              {post.image ? <><img src={post.image} alt={post.alt} /><i style={{ left: `${post.focalX ?? 50}%`, top: `${post.focalY ?? 50}%` }} /><span className={v2.focalLabel}><Crosshair size={13} />Crop focus {post.focalX ?? 50}% / {post.focalY ?? 50}%</span></> : <div className={s.emptyPhoto}><Camera size={36} /><span>{busy ? "Uploading..." : "No photo selected"}</span></div>}
               <span className={s.corner}>DF / {String(index + 1).padStart(2, "0")}</span>
             </div>
             <p className={s.uploadStatus} role="status">{busy ? "Preparing and uploading photo..." : error}</p>
